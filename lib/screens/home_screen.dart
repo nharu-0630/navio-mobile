@@ -1,10 +1,11 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:navio_mobile/screens/notes_screen.dart';
+import 'package:navio_mobile/database/database.dart';
+import 'package:navio_mobile/database/todo_dao.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/pdf_map_provider.dart';
-import '../providers/shopping_list_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,13 +16,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _textController = TextEditingController();
+  TodoDao? _todoDao;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final db = Provider.of<Database>(context);
+    _todoDao = db.todoDao;
+  }
 
   @override
   void initState() {
     super.initState();
-    // データの初期ロード
     Future.microtask(() {
-      Provider.of<ShoppingListProvider>(context, listen: false).loadItems();
       Provider.of<PDFMapProvider>(context, listen: false).loadSavedMap();
     });
   }
@@ -32,23 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _addItem() {
-    if (_textController.text.isNotEmpty) {
-      Provider.of<ShoppingListProvider>(
-        context,
-        listen: false,
-      ).addItem(_textController.text);
+  void _insertTodo() {
+    final title = _textController.text.trim();
+    if (title.isNotEmpty) {
+      final todo = TodosCompanion(
+        title: Value(title),
+        isDone: const Value(false),
+      );
+      _todoDao?.insertTodo(todo);
       _textController.clear();
     }
+  }
+
+  void _toggleTodoDone(Todo todo) {
+    final updatedTodo = todo.copyWith(isDone: !todo.isDone);
+    _todoDao?.updateTodo(updatedTodo);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('買い物リスト & マップ')),
       body: Column(
         children: [
-          // PDFマップビューア（画面の上半分）
           Expanded(
             flex: 1,
             child: Consumer<PDFMapProvider>(
@@ -85,7 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // 買い物リスト（画面の下半分）
           Expanded(
             flex: 1,
             child: Column(
@@ -101,51 +112,47 @@ class _HomeScreenState extends State<HomeScreen> {
                             hintText: '買い物アイテムを追加',
                             border: OutlineInputBorder(),
                           ),
-                          onSubmitted: (_) => _addItem(),
+                          onSubmitted: (_) {
+                            _insertTodo();
+                          },
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.add),
-                        onPressed: _addItem,
+                        onPressed: _insertTodo,
                       ),
                     ],
                   ),
                 ),
                 Expanded(
-                  child: Consumer<ShoppingListProvider>(
-                    builder: (context, provider, child) {
-                      if (provider.isLoading) {
+                  child: StreamBuilder<List<Todo>>(
+                    stream: _todoDao?.watchAllTodos(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      if (provider.items.isEmpty) {
-                        return const Center(child: Text('買い物リストが空です'));
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text('アイテムがありません'));
                       }
 
+                      final todos = snapshot.data!;
                       return ListView.builder(
-                        itemCount: provider.items.length,
+                        itemCount: todos.length,
                         itemBuilder: (context, index) {
-                          final item = provider.items[index];
+                          final todo = todos[index];
                           return ListTile(
-                            title: Text(
-                              item.name,
-                              style: TextStyle(
-                                decoration:
-                                    item.isCompleted
-                                        ? TextDecoration.lineThrough
-                                        : null,
-                              ),
-                            ),
                             leading: Checkbox(
-                              value: item.isCompleted,
-                              onChanged: (_) {
-                                provider.toggleItemStatus(item.id!);
+                              value: todo.isDone,
+                              onChanged: (value) {
+                                _toggleTodoDone(todo);
                               },
                             ),
+                            title: Text(todo.title),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
-                                provider.deleteItem(item.id!);
+                                _todoDao?.deleteTodo(todo);
                               },
                             ),
                           );
@@ -182,105 +189,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     _showUrlInputDialog(context);
                   },
                 ),
-                ActionButton(
-                  icon: Icons.delete_sweep,
-                  label: '完了アイテム削除',
-                  onPressed: () {
-                    _deleteCompletedItems(context);
-                  },
-                ),
-                ActionButton(
-                  icon: Icons.note_add,
-                  label: 'メモ',
-                  onPressed: () {
-                    _showNotesDialog(context);
-                  },
-                ),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  void _deleteCompletedItems(BuildContext context) {
-    final provider = Provider.of<ShoppingListProvider>(context, listen: false);
-    final completedItems =
-        provider.items.where((item) => item.isCompleted).toList();
-
-    if (completedItems.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('完了したアイテムはありません')));
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('確認'),
-            content: const Text('完了したアイテムをすべて削除しますか？'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('キャンセル'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  for (var item in completedItems) {
-                    provider.deleteItem(item.id!);
-                  }
-                },
-                child: const Text('削除'),
-              ),
-            ],
-          ),
-    );
-  }
-
-  // void _showNotesDialog(BuildContext context) {
-  //   final TextEditingController noteController = TextEditingController();
-
-  //   showDialog(
-  //     context: context,
-  //     builder:
-  //         (context) => AlertDialog(
-  //           title: const Text('メモ'),
-  //           content: TextField(
-  //             controller: noteController,
-  //             maxLines: 5,
-  //             decoration: const InputDecoration(
-  //               hintText: 'メモを入力してください',
-  //               border: OutlineInputBorder(),
-  //             ),
-  //           ),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(context),
-  //               child: const Text('キャンセル'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 // ここでメモを保存する処理を追加できます
-  //                 Navigator.pop(context);
-  //                 ScaffoldMessenger.of(
-  //                   context,
-  //                 ).showSnackBar(const SnackBar(content: Text('メモを保存しました')));
-  //               },
-  //               child: const Text('保存'),
-  //             ),
-  //           ],
-  //         ),
-  //   );
-  // }
-
-  void _showNotesDialog(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const NotesScreen()),
     );
   }
 
