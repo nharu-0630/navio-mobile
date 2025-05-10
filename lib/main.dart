@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:navio_mobile/database/database.dart';
 import 'package:provider/provider.dart';
 
-import 'providers/pdf_map_provider.dart';
-import 'screens/home_screen.dart';
+import 'provider/pdf_provider.dart';
+import 'screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PDFMapProvider())],
+      providers: [ChangeNotifierProvider(create: (_) => PDFProvider())],
       child: Provider(
         create: (_) => Database(),
         dispose: (_, Database db) => db.close(),

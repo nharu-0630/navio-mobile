@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../services/pdf_service.dart';
+import '../service/pdf_service.dart';
 
-class PDFMapProvider with ChangeNotifier {
+class PDFProvider with ChangeNotifier {
   String? _pdfPath;
   bool _isLoading = false;
 
