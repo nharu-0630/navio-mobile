@@ -3,12 +3,12 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $BuildingsTable extends Buildings
-    with TableInfo<$BuildingsTable, Building> {
+class $CircleInfosTable extends CircleInfos
+    with TableInfo<$CircleInfosTable, CircleInfo> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $BuildingsTable(this.attachedDatabase, [this._alias]);
+  $CircleInfosTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -21,6 +21,59 @@ class $BuildingsTable extends Buildings
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'PRIMARY KEY AUTOINCREMENT',
     ),
+  );
+  static const VerificationMeta _circleIDMeta = const VerificationMeta(
+    'circleID',
+  );
+  @override
+  late final GeneratedColumn<String> circleID = GeneratedColumn<String>(
+    'circle_i_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _spaceMeta = const VerificationMeta('space');
+  @override
+  late final GeneratedColumn<String> space = GeneratedColumn<String>(
+    'space',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _artifactTitleMeta = const VerificationMeta(
+    'artifactTitle',
+  );
+  @override
+  late final GeneratedColumn<String> artifactTitle = GeneratedColumn<String>(
+    'artifact_title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _artifactTendencyMeta = const VerificationMeta(
+    'artifactTendency',
+  );
+  @override
+  late final GeneratedColumn<String> artifactTendency = GeneratedColumn<String>(
+    'artifact_tendency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameKanaMeta = const VerificationMeta(
+    'nameKana',
+  );
+  @override
+  late final GeneratedColumn<String> nameKana = GeneratedColumn<String>(
+    'name_kana',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -31,894 +84,158 @@ class $BuildingsTable extends Buildings
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _contentMeta = const VerificationMeta(
-    'content',
+  static const VerificationMeta _penNameMeta = const VerificationMeta(
+    'penName',
   );
   @override
-  late final GeneratedColumn<Uint8List> content = GeneratedColumn<Uint8List>(
-    'content',
-    aliasedName,
-    false,
-    type: DriftSqlType.blob,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, name, content];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'buildings';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Building> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('content')) {
-      context.handle(
-        _contentMeta,
-        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Building map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Building(
-      id:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}id'],
-          )!,
-      name:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}name'],
-          )!,
-      content:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.blob,
-            data['${effectivePrefix}content'],
-          )!,
-    );
-  }
-
-  @override
-  $BuildingsTable createAlias(String alias) {
-    return $BuildingsTable(attachedDatabase, alias);
-  }
-}
-
-class Building extends DataClass implements Insertable<Building> {
-  final int id;
-  final String name;
-  final Uint8List content;
-  const Building({required this.id, required this.name, required this.content});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['name'] = Variable<String>(name);
-    map['content'] = Variable<Uint8List>(content);
-    return map;
-  }
-
-  BuildingsCompanion toCompanion(bool nullToAbsent) {
-    return BuildingsCompanion(
-      id: Value(id),
-      name: Value(name),
-      content: Value(content),
-    );
-  }
-
-  factory Building.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Building(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      content: serializer.fromJson<Uint8List>(json['content']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-      'content': serializer.toJson<Uint8List>(content),
-    };
-  }
-
-  Building copyWith({int? id, String? name, Uint8List? content}) => Building(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    content: content ?? this.content,
-  );
-  Building copyWithCompanion(BuildingsCompanion data) {
-    return Building(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-      content: data.content.present ? data.content.value : this.content,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Building(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('content: $content')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, $driftBlobEquality.hash(content));
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Building &&
-          other.id == this.id &&
-          other.name == this.name &&
-          $driftBlobEquality.equals(other.content, this.content));
-}
-
-class BuildingsCompanion extends UpdateCompanion<Building> {
-  final Value<int> id;
-  final Value<String> name;
-  final Value<Uint8List> content;
-  const BuildingsCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.content = const Value.absent(),
-  });
-  BuildingsCompanion.insert({
-    this.id = const Value.absent(),
-    required String name,
-    required Uint8List content,
-  }) : name = Value(name),
-       content = Value(content);
-  static Insertable<Building> custom({
-    Expression<int>? id,
-    Expression<String>? name,
-    Expression<Uint8List>? content,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (content != null) 'content': content,
-    });
-  }
-
-  BuildingsCompanion copyWith({
-    Value<int>? id,
-    Value<String>? name,
-    Value<Uint8List>? content,
-  }) {
-    return BuildingsCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      content: content ?? this.content,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (content.present) {
-      map['content'] = Variable<Uint8List>(content.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('BuildingsCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('content: $content')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $CategoriesTable extends Categories
-    with TableInfo<$CategoriesTable, Category> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $CategoriesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
+  late final GeneratedColumn<String> penName = GeneratedColumn<String>(
+    'pen_name',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, name];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'categories';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Category> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Category(
-      id:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}id'],
-          )!,
-      name:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}name'],
-          )!,
-    );
-  }
-
-  @override
-  $CategoriesTable createAlias(String alias) {
-    return $CategoriesTable(attachedDatabase, alias);
-  }
-}
-
-class Category extends DataClass implements Insertable<Category> {
-  final int id;
-  final String name;
-  const Category({required this.id, required this.name});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['name'] = Variable<String>(name);
-    return map;
-  }
-
-  CategoriesCompanion toCompanion(bool nullToAbsent) {
-    return CategoriesCompanion(id: Value(id), name: Value(name));
-  }
-
-  factory Category.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Category(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-    };
-  }
-
-  Category copyWith({int? id, String? name}) =>
-      Category(id: id ?? this.id, name: name ?? this.name);
-  Category copyWithCompanion(CategoriesCompanion data) {
-    return Category(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Category(')
-          ..write('id: $id, ')
-          ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Category && other.id == this.id && other.name == this.name);
-}
-
-class CategoriesCompanion extends UpdateCompanion<Category> {
-  final Value<int> id;
-  final Value<String> name;
-  const CategoriesCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-  });
-  CategoriesCompanion.insert({
-    this.id = const Value.absent(),
-    required String name,
-  }) : name = Value(name);
-  static Insertable<Category> custom({
-    Expression<int>? id,
-    Expression<String>? name,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    });
-  }
-
-  CategoriesCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return CategoriesCompanion(id: id ?? this.id, name: name ?? this.name);
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('CategoriesCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $CirclesTable extends Circles with TableInfo<$CirclesTable, Circle> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $CirclesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
+    defaultValue: const Constant(''),
   );
-  static const VerificationMeta _blockMeta = const VerificationMeta('block');
-  @override
-  late final GeneratedColumn<String> block = GeneratedColumn<String>(
-    'block',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _numberMeta = const VerificationMeta('number');
-  @override
-  late final GeneratedColumn<int> number = GeneratedColumn<int>(
-    'number',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _suffixMeta = const VerificationMeta('suffix');
-  @override
-  late final GeneratedColumn<String> suffix = GeneratedColumn<String>(
-    'suffix',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _buildingIdMeta = const VerificationMeta(
-    'buildingId',
+  static const VerificationMeta _isMangaMeta = const VerificationMeta(
+    'isManga',
   );
   @override
-  late final GeneratedColumn<int> buildingId = GeneratedColumn<int>(
-    'building_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES buildings (id)',
-    ),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, block, number, suffix, buildingId];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'circles';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Circle> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('block')) {
-      context.handle(
-        _blockMeta,
-        block.isAcceptableOrUnknown(data['block']!, _blockMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_blockMeta);
-    }
-    if (data.containsKey('number')) {
-      context.handle(
-        _numberMeta,
-        number.isAcceptableOrUnknown(data['number']!, _numberMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_numberMeta);
-    }
-    if (data.containsKey('suffix')) {
-      context.handle(
-        _suffixMeta,
-        suffix.isAcceptableOrUnknown(data['suffix']!, _suffixMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_suffixMeta);
-    }
-    if (data.containsKey('building_id')) {
-      context.handle(
-        _buildingIdMeta,
-        buildingId.isAcceptableOrUnknown(data['building_id']!, _buildingIdMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Circle map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Circle(
-      id:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}id'],
-          )!,
-      block:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}block'],
-          )!,
-      number:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}number'],
-          )!,
-      suffix:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.string,
-            data['${effectivePrefix}suffix'],
-          )!,
-      buildingId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}building_id'],
-      ),
-    );
-  }
-
-  @override
-  $CirclesTable createAlias(String alias) {
-    return $CirclesTable(attachedDatabase, alias);
-  }
-}
-
-class Circle extends DataClass implements Insertable<Circle> {
-  final int id;
-  final String block;
-  final int number;
-  final String suffix;
-  final int? buildingId;
-  const Circle({
-    required this.id,
-    required this.block,
-    required this.number,
-    required this.suffix,
-    this.buildingId,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['block'] = Variable<String>(block);
-    map['number'] = Variable<int>(number);
-    map['suffix'] = Variable<String>(suffix);
-    if (!nullToAbsent || buildingId != null) {
-      map['building_id'] = Variable<int>(buildingId);
-    }
-    return map;
-  }
-
-  CirclesCompanion toCompanion(bool nullToAbsent) {
-    return CirclesCompanion(
-      id: Value(id),
-      block: Value(block),
-      number: Value(number),
-      suffix: Value(suffix),
-      buildingId:
-          buildingId == null && nullToAbsent
-              ? const Value.absent()
-              : Value(buildingId),
-    );
-  }
-
-  factory Circle.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Circle(
-      id: serializer.fromJson<int>(json['id']),
-      block: serializer.fromJson<String>(json['block']),
-      number: serializer.fromJson<int>(json['number']),
-      suffix: serializer.fromJson<String>(json['suffix']),
-      buildingId: serializer.fromJson<int?>(json['buildingId']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'block': serializer.toJson<String>(block),
-      'number': serializer.toJson<int>(number),
-      'suffix': serializer.toJson<String>(suffix),
-      'buildingId': serializer.toJson<int?>(buildingId),
-    };
-  }
-
-  Circle copyWith({
-    int? id,
-    String? block,
-    int? number,
-    String? suffix,
-    Value<int?> buildingId = const Value.absent(),
-  }) => Circle(
-    id: id ?? this.id,
-    block: block ?? this.block,
-    number: number ?? this.number,
-    suffix: suffix ?? this.suffix,
-    buildingId: buildingId.present ? buildingId.value : this.buildingId,
-  );
-  Circle copyWithCompanion(CirclesCompanion data) {
-    return Circle(
-      id: data.id.present ? data.id.value : this.id,
-      block: data.block.present ? data.block.value : this.block,
-      number: data.number.present ? data.number.value : this.number,
-      suffix: data.suffix.present ? data.suffix.value : this.suffix,
-      buildingId:
-          data.buildingId.present ? data.buildingId.value : this.buildingId,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Circle(')
-          ..write('id: $id, ')
-          ..write('block: $block, ')
-          ..write('number: $number, ')
-          ..write('suffix: $suffix, ')
-          ..write('buildingId: $buildingId')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, block, number, suffix, buildingId);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Circle &&
-          other.id == this.id &&
-          other.block == this.block &&
-          other.number == this.number &&
-          other.suffix == this.suffix &&
-          other.buildingId == this.buildingId);
-}
-
-class CirclesCompanion extends UpdateCompanion<Circle> {
-  final Value<int> id;
-  final Value<String> block;
-  final Value<int> number;
-  final Value<String> suffix;
-  final Value<int?> buildingId;
-  const CirclesCompanion({
-    this.id = const Value.absent(),
-    this.block = const Value.absent(),
-    this.number = const Value.absent(),
-    this.suffix = const Value.absent(),
-    this.buildingId = const Value.absent(),
-  });
-  CirclesCompanion.insert({
-    this.id = const Value.absent(),
-    required String block,
-    required int number,
-    required String suffix,
-    this.buildingId = const Value.absent(),
-  }) : block = Value(block),
-       number = Value(number),
-       suffix = Value(suffix);
-  static Insertable<Circle> custom({
-    Expression<int>? id,
-    Expression<String>? block,
-    Expression<int>? number,
-    Expression<String>? suffix,
-    Expression<int>? buildingId,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (block != null) 'block': block,
-      if (number != null) 'number': number,
-      if (suffix != null) 'suffix': suffix,
-      if (buildingId != null) 'building_id': buildingId,
-    });
-  }
-
-  CirclesCompanion copyWith({
-    Value<int>? id,
-    Value<String>? block,
-    Value<int>? number,
-    Value<String>? suffix,
-    Value<int?>? buildingId,
-  }) {
-    return CirclesCompanion(
-      id: id ?? this.id,
-      block: block ?? this.block,
-      number: number ?? this.number,
-      suffix: suffix ?? this.suffix,
-      buildingId: buildingId ?? this.buildingId,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (block.present) {
-      map['block'] = Variable<String>(block.value);
-    }
-    if (number.present) {
-      map['number'] = Variable<int>(number.value);
-    }
-    if (suffix.present) {
-      map['suffix'] = Variable<String>(suffix.value);
-    }
-    if (buildingId.present) {
-      map['building_id'] = Variable<int>(buildingId.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('CirclesCompanion(')
-          ..write('id: $id, ')
-          ..write('block: $block, ')
-          ..write('number: $number, ')
-          ..write('suffix: $suffix, ')
-          ..write('buildingId: $buildingId')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $TodosTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _priorityMeta = const VerificationMeta(
-    'priority',
-  );
-  @override
-  late final GeneratedColumn<int> priority = GeneratedColumn<int>(
-    'priority',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-    'title',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _noteMeta = const VerificationMeta('note');
-  @override
-  late final GeneratedColumn<String> note = GeneratedColumn<String>(
-    'note',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _quantityMeta = const VerificationMeta(
-    'quantity',
-  );
-  @override
-  late final GeneratedColumn<int> quantity = GeneratedColumn<int>(
-    'quantity',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
-  static const VerificationMeta _priceMeta = const VerificationMeta('price');
-  @override
-  late final GeneratedColumn<int> price = GeneratedColumn<int>(
-    'price',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _isDoneMeta = const VerificationMeta('isDone');
-  @override
-  late final GeneratedColumn<bool> isDone = GeneratedColumn<bool>(
-    'is_done',
+  late final GeneratedColumn<bool> isManga = GeneratedColumn<bool>(
+    'is_manga',
     aliasedName,
     false,
     type: DriftSqlType.bool,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_done" IN (0, 1))',
+      'CHECK ("is_manga" IN (0, 1))',
     ),
-    defaultValue: const Constant(false),
   );
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
+  static const VerificationMeta _isNovelMeta = const VerificationMeta(
+    'isNovel',
   );
   @override
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-    'category_id',
+  late final GeneratedColumn<bool> isNovel = GeneratedColumn<bool>(
+    'is_novel',
     aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES categories (id)',
+      'CHECK ("is_novel" IN (0, 1))',
     ),
   );
-  static const VerificationMeta _circleIdMeta = const VerificationMeta(
-    'circleId',
+  static const VerificationMeta _isR18Meta = const VerificationMeta('isR18');
+  @override
+  late final GeneratedColumn<bool> isR18 = GeneratedColumn<bool>(
+    'is_r18',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_r18" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _homepageURLMeta = const VerificationMeta(
+    'homepageURL',
   );
   @override
-  late final GeneratedColumn<int> circleId = GeneratedColumn<int>(
-    'circle_id',
+  late final GeneratedColumn<String> homepageURL = GeneratedColumn<String>(
+    'homepage_u_r_l',
     aliasedName,
-    true,
-    type: DriftSqlType.int,
+    false,
+    type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES circles (id)',
-    ),
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _twitterURLMeta = const VerificationMeta(
+    'twitterURL',
+  );
+  @override
+  late final GeneratedColumn<String> twitterURL = GeneratedColumn<String>(
+    'twitter_u_r_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _pixivURLMeta = const VerificationMeta(
+    'pixivURL',
+  );
+  @override
+  late final GeneratedColumn<String> pixivURL = GeneratedColumn<String>(
+    'pixiv_u_r_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _imageURLMeta = const VerificationMeta(
+    'imageURL',
+  );
+  @override
+  late final GeneratedColumn<String> imageURL = GeneratedColumn<String>(
+    'image_u_r_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    priority,
-    title,
-    note,
-    quantity,
-    price,
-    isDone,
-    categoryId,
-    circleId,
+    circleID,
+    space,
+    artifactTitle,
+    artifactTendency,
+    nameKana,
+    name,
+    penName,
+    isManga,
+    isNovel,
+    isR18,
+    homepageURL,
+    twitterURL,
+    pixivURL,
+    imageURL,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'todos';
+  static const String $name = 'circle_infos';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Todo> instance, {
+    Insertable<CircleInfo> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -926,54 +243,130 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('priority')) {
+    if (data.containsKey('circle_i_d')) {
       context.handle(
-        _priorityMeta,
-        priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta),
-      );
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-        _titleMeta,
-        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+        _circleIDMeta,
+        circleID.isAcceptableOrUnknown(data['circle_i_d']!, _circleIDMeta),
       );
     } else if (isInserting) {
-      context.missing(_titleMeta);
+      context.missing(_circleIDMeta);
     }
-    if (data.containsKey('note')) {
+    if (data.containsKey('space')) {
       context.handle(
-        _noteMeta,
-        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+        _spaceMeta,
+        space.isAcceptableOrUnknown(data['space']!, _spaceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_spaceMeta);
+    }
+    if (data.containsKey('artifact_title')) {
+      context.handle(
+        _artifactTitleMeta,
+        artifactTitle.isAcceptableOrUnknown(
+          data['artifact_title']!,
+          _artifactTitleMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_artifactTitleMeta);
+    }
+    if (data.containsKey('artifact_tendency')) {
+      context.handle(
+        _artifactTendencyMeta,
+        artifactTendency.isAcceptableOrUnknown(
+          data['artifact_tendency']!,
+          _artifactTendencyMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_artifactTendencyMeta);
+    }
+    if (data.containsKey('name_kana')) {
+      context.handle(
+        _nameKanaMeta,
+        nameKana.isAcceptableOrUnknown(data['name_kana']!, _nameKanaMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameKanaMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('pen_name')) {
+      context.handle(
+        _penNameMeta,
+        penName.isAcceptableOrUnknown(data['pen_name']!, _penNameMeta),
       );
     }
-    if (data.containsKey('quantity')) {
+    if (data.containsKey('is_manga')) {
       context.handle(
-        _quantityMeta,
-        quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta),
+        _isMangaMeta,
+        isManga.isAcceptableOrUnknown(data['is_manga']!, _isMangaMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isMangaMeta);
+    }
+    if (data.containsKey('is_novel')) {
+      context.handle(
+        _isNovelMeta,
+        isNovel.isAcceptableOrUnknown(data['is_novel']!, _isNovelMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isNovelMeta);
+    }
+    if (data.containsKey('is_r18')) {
+      context.handle(
+        _isR18Meta,
+        isR18.isAcceptableOrUnknown(data['is_r18']!, _isR18Meta),
+      );
+    } else if (isInserting) {
+      context.missing(_isR18Meta);
+    }
+    if (data.containsKey('homepage_u_r_l')) {
+      context.handle(
+        _homepageURLMeta,
+        homepageURL.isAcceptableOrUnknown(
+          data['homepage_u_r_l']!,
+          _homepageURLMeta,
+        ),
       );
     }
-    if (data.containsKey('price')) {
+    if (data.containsKey('twitter_u_r_l')) {
       context.handle(
-        _priceMeta,
-        price.isAcceptableOrUnknown(data['price']!, _priceMeta),
+        _twitterURLMeta,
+        twitterURL.isAcceptableOrUnknown(
+          data['twitter_u_r_l']!,
+          _twitterURLMeta,
+        ),
       );
     }
-    if (data.containsKey('is_done')) {
+    if (data.containsKey('pixiv_u_r_l')) {
       context.handle(
-        _isDoneMeta,
-        isDone.isAcceptableOrUnknown(data['is_done']!, _isDoneMeta),
+        _pixivURLMeta,
+        pixivURL.isAcceptableOrUnknown(data['pixiv_u_r_l']!, _pixivURLMeta),
       );
     }
-    if (data.containsKey('category_id')) {
+    if (data.containsKey('image_u_r_l')) {
       context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+        _imageURLMeta,
+        imageURL.isAcceptableOrUnknown(data['image_u_r_l']!, _imageURLMeta),
       );
     }
-    if (data.containsKey('circle_id')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _circleIdMeta,
-        circleId.isAcceptableOrUnknown(data['circle_id']!, _circleIdMeta),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
     return context;
@@ -982,137 +375,208 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Todo map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CircleInfo map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Todo(
+    return CircleInfo(
       id:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
             data['${effectivePrefix}id'],
           )!,
-      priority:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}priority'],
-          )!,
-      title:
+      circleID:
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
-            data['${effectivePrefix}title'],
+            data['${effectivePrefix}circle_i_d'],
           )!,
-      note: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}note'],
-      ),
-      quantity:
+      space:
           attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}quantity'],
+            DriftSqlType.string,
+            data['${effectivePrefix}space'],
           )!,
-      price:
+      artifactTitle:
           attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}price'],
+            DriftSqlType.string,
+            data['${effectivePrefix}artifact_title'],
           )!,
-      isDone:
+      artifactTendency:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}artifact_tendency'],
+          )!,
+      nameKana:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}name_kana'],
+          )!,
+      name:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}name'],
+          )!,
+      penName:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}pen_name'],
+          )!,
+      isManga:
           attachedDatabase.typeMapping.read(
             DriftSqlType.bool,
-            data['${effectivePrefix}is_done'],
+            data['${effectivePrefix}is_manga'],
           )!,
-      categoryId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}category_id'],
-      ),
-      circleId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}circle_id'],
-      ),
+      isNovel:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}is_novel'],
+          )!,
+      isR18:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}is_r18'],
+          )!,
+      homepageURL:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}homepage_u_r_l'],
+          )!,
+      twitterURL:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}twitter_u_r_l'],
+          )!,
+      pixivURL:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}pixiv_u_r_l'],
+          )!,
+      imageURL:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}image_u_r_l'],
+          )!,
+      createdAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}created_at'],
+          )!,
+      updatedAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}updated_at'],
+          )!,
     );
   }
 
   @override
-  $TodosTable createAlias(String alias) {
-    return $TodosTable(attachedDatabase, alias);
+  $CircleInfosTable createAlias(String alias) {
+    return $CircleInfosTable(attachedDatabase, alias);
   }
 }
 
-class Todo extends DataClass implements Insertable<Todo> {
+class CircleInfo extends DataClass implements Insertable<CircleInfo> {
   final int id;
-  final int priority;
-  final String title;
-  final String? note;
-  final int quantity;
-  final int price;
-  final bool isDone;
-  final int? categoryId;
-  final int? circleId;
-  const Todo({
+  final String circleID;
+  final String space;
+  final String artifactTitle;
+  final String artifactTendency;
+  final String nameKana;
+  final String name;
+  final String penName;
+  final bool isManga;
+  final bool isNovel;
+  final bool isR18;
+  final String homepageURL;
+  final String twitterURL;
+  final String pixivURL;
+  final String imageURL;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CircleInfo({
     required this.id,
-    required this.priority,
-    required this.title,
-    this.note,
-    required this.quantity,
-    required this.price,
-    required this.isDone,
-    this.categoryId,
-    this.circleId,
+    required this.circleID,
+    required this.space,
+    required this.artifactTitle,
+    required this.artifactTendency,
+    required this.nameKana,
+    required this.name,
+    required this.penName,
+    required this.isManga,
+    required this.isNovel,
+    required this.isR18,
+    required this.homepageURL,
+    required this.twitterURL,
+    required this.pixivURL,
+    required this.imageURL,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['priority'] = Variable<int>(priority);
-    map['title'] = Variable<String>(title);
-    if (!nullToAbsent || note != null) {
-      map['note'] = Variable<String>(note);
-    }
-    map['quantity'] = Variable<int>(quantity);
-    map['price'] = Variable<int>(price);
-    map['is_done'] = Variable<bool>(isDone);
-    if (!nullToAbsent || categoryId != null) {
-      map['category_id'] = Variable<int>(categoryId);
-    }
-    if (!nullToAbsent || circleId != null) {
-      map['circle_id'] = Variable<int>(circleId);
-    }
+    map['circle_i_d'] = Variable<String>(circleID);
+    map['space'] = Variable<String>(space);
+    map['artifact_title'] = Variable<String>(artifactTitle);
+    map['artifact_tendency'] = Variable<String>(artifactTendency);
+    map['name_kana'] = Variable<String>(nameKana);
+    map['name'] = Variable<String>(name);
+    map['pen_name'] = Variable<String>(penName);
+    map['is_manga'] = Variable<bool>(isManga);
+    map['is_novel'] = Variable<bool>(isNovel);
+    map['is_r18'] = Variable<bool>(isR18);
+    map['homepage_u_r_l'] = Variable<String>(homepageURL);
+    map['twitter_u_r_l'] = Variable<String>(twitterURL);
+    map['pixiv_u_r_l'] = Variable<String>(pixivURL);
+    map['image_u_r_l'] = Variable<String>(imageURL);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
-  TodosCompanion toCompanion(bool nullToAbsent) {
-    return TodosCompanion(
+  CircleInfosCompanion toCompanion(bool nullToAbsent) {
+    return CircleInfosCompanion(
       id: Value(id),
-      priority: Value(priority),
-      title: Value(title),
-      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
-      quantity: Value(quantity),
-      price: Value(price),
-      isDone: Value(isDone),
-      categoryId:
-          categoryId == null && nullToAbsent
-              ? const Value.absent()
-              : Value(categoryId),
-      circleId:
-          circleId == null && nullToAbsent
-              ? const Value.absent()
-              : Value(circleId),
+      circleID: Value(circleID),
+      space: Value(space),
+      artifactTitle: Value(artifactTitle),
+      artifactTendency: Value(artifactTendency),
+      nameKana: Value(nameKana),
+      name: Value(name),
+      penName: Value(penName),
+      isManga: Value(isManga),
+      isNovel: Value(isNovel),
+      isR18: Value(isR18),
+      homepageURL: Value(homepageURL),
+      twitterURL: Value(twitterURL),
+      pixivURL: Value(pixivURL),
+      imageURL: Value(imageURL),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
-  factory Todo.fromJson(
+  factory CircleInfo.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Todo(
+    return CircleInfo(
       id: serializer.fromJson<int>(json['id']),
-      priority: serializer.fromJson<int>(json['priority']),
-      title: serializer.fromJson<String>(json['title']),
-      note: serializer.fromJson<String?>(json['note']),
-      quantity: serializer.fromJson<int>(json['quantity']),
-      price: serializer.fromJson<int>(json['price']),
-      isDone: serializer.fromJson<bool>(json['isDone']),
-      categoryId: serializer.fromJson<int?>(json['categoryId']),
-      circleId: serializer.fromJson<int?>(json['circleId']),
+      circleID: serializer.fromJson<String>(json['circleID']),
+      space: serializer.fromJson<String>(json['space']),
+      artifactTitle: serializer.fromJson<String>(json['artifactTitle']),
+      artifactTendency: serializer.fromJson<String>(json['artifactTendency']),
+      nameKana: serializer.fromJson<String>(json['nameKana']),
+      name: serializer.fromJson<String>(json['name']),
+      penName: serializer.fromJson<String>(json['penName']),
+      isManga: serializer.fromJson<bool>(json['isManga']),
+      isNovel: serializer.fromJson<bool>(json['isNovel']),
+      isR18: serializer.fromJson<bool>(json['isR18']),
+      homepageURL: serializer.fromJson<String>(json['homepageURL']),
+      twitterURL: serializer.fromJson<String>(json['twitterURL']),
+      pixivURL: serializer.fromJson<String>(json['pixivURL']),
+      imageURL: serializer.fromJson<String>(json['imageURL']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -1120,65 +584,112 @@ class Todo extends DataClass implements Insertable<Todo> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'priority': serializer.toJson<int>(priority),
-      'title': serializer.toJson<String>(title),
-      'note': serializer.toJson<String?>(note),
-      'quantity': serializer.toJson<int>(quantity),
-      'price': serializer.toJson<int>(price),
-      'isDone': serializer.toJson<bool>(isDone),
-      'categoryId': serializer.toJson<int?>(categoryId),
-      'circleId': serializer.toJson<int?>(circleId),
+      'circleID': serializer.toJson<String>(circleID),
+      'space': serializer.toJson<String>(space),
+      'artifactTitle': serializer.toJson<String>(artifactTitle),
+      'artifactTendency': serializer.toJson<String>(artifactTendency),
+      'nameKana': serializer.toJson<String>(nameKana),
+      'name': serializer.toJson<String>(name),
+      'penName': serializer.toJson<String>(penName),
+      'isManga': serializer.toJson<bool>(isManga),
+      'isNovel': serializer.toJson<bool>(isNovel),
+      'isR18': serializer.toJson<bool>(isR18),
+      'homepageURL': serializer.toJson<String>(homepageURL),
+      'twitterURL': serializer.toJson<String>(twitterURL),
+      'pixivURL': serializer.toJson<String>(pixivURL),
+      'imageURL': serializer.toJson<String>(imageURL),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  Todo copyWith({
+  CircleInfo copyWith({
     int? id,
-    int? priority,
-    String? title,
-    Value<String?> note = const Value.absent(),
-    int? quantity,
-    int? price,
-    bool? isDone,
-    Value<int?> categoryId = const Value.absent(),
-    Value<int?> circleId = const Value.absent(),
-  }) => Todo(
+    String? circleID,
+    String? space,
+    String? artifactTitle,
+    String? artifactTendency,
+    String? nameKana,
+    String? name,
+    String? penName,
+    bool? isManga,
+    bool? isNovel,
+    bool? isR18,
+    String? homepageURL,
+    String? twitterURL,
+    String? pixivURL,
+    String? imageURL,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CircleInfo(
     id: id ?? this.id,
-    priority: priority ?? this.priority,
-    title: title ?? this.title,
-    note: note.present ? note.value : this.note,
-    quantity: quantity ?? this.quantity,
-    price: price ?? this.price,
-    isDone: isDone ?? this.isDone,
-    categoryId: categoryId.present ? categoryId.value : this.categoryId,
-    circleId: circleId.present ? circleId.value : this.circleId,
+    circleID: circleID ?? this.circleID,
+    space: space ?? this.space,
+    artifactTitle: artifactTitle ?? this.artifactTitle,
+    artifactTendency: artifactTendency ?? this.artifactTendency,
+    nameKana: nameKana ?? this.nameKana,
+    name: name ?? this.name,
+    penName: penName ?? this.penName,
+    isManga: isManga ?? this.isManga,
+    isNovel: isNovel ?? this.isNovel,
+    isR18: isR18 ?? this.isR18,
+    homepageURL: homepageURL ?? this.homepageURL,
+    twitterURL: twitterURL ?? this.twitterURL,
+    pixivURL: pixivURL ?? this.pixivURL,
+    imageURL: imageURL ?? this.imageURL,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
-  Todo copyWithCompanion(TodosCompanion data) {
-    return Todo(
+  CircleInfo copyWithCompanion(CircleInfosCompanion data) {
+    return CircleInfo(
       id: data.id.present ? data.id.value : this.id,
-      priority: data.priority.present ? data.priority.value : this.priority,
-      title: data.title.present ? data.title.value : this.title,
-      note: data.note.present ? data.note.value : this.note,
-      quantity: data.quantity.present ? data.quantity.value : this.quantity,
-      price: data.price.present ? data.price.value : this.price,
-      isDone: data.isDone.present ? data.isDone.value : this.isDone,
-      categoryId:
-          data.categoryId.present ? data.categoryId.value : this.categoryId,
-      circleId: data.circleId.present ? data.circleId.value : this.circleId,
+      circleID: data.circleID.present ? data.circleID.value : this.circleID,
+      space: data.space.present ? data.space.value : this.space,
+      artifactTitle:
+          data.artifactTitle.present
+              ? data.artifactTitle.value
+              : this.artifactTitle,
+      artifactTendency:
+          data.artifactTendency.present
+              ? data.artifactTendency.value
+              : this.artifactTendency,
+      nameKana: data.nameKana.present ? data.nameKana.value : this.nameKana,
+      name: data.name.present ? data.name.value : this.name,
+      penName: data.penName.present ? data.penName.value : this.penName,
+      isManga: data.isManga.present ? data.isManga.value : this.isManga,
+      isNovel: data.isNovel.present ? data.isNovel.value : this.isNovel,
+      isR18: data.isR18.present ? data.isR18.value : this.isR18,
+      homepageURL:
+          data.homepageURL.present ? data.homepageURL.value : this.homepageURL,
+      twitterURL:
+          data.twitterURL.present ? data.twitterURL.value : this.twitterURL,
+      pixivURL: data.pixivURL.present ? data.pixivURL.value : this.pixivURL,
+      imageURL: data.imageURL.present ? data.imageURL.value : this.imageURL,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('Todo(')
+    return (StringBuffer('CircleInfo(')
           ..write('id: $id, ')
-          ..write('priority: $priority, ')
-          ..write('title: $title, ')
-          ..write('note: $note, ')
-          ..write('quantity: $quantity, ')
-          ..write('price: $price, ')
-          ..write('isDone: $isDone, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('circleId: $circleId')
+          ..write('circleID: $circleID, ')
+          ..write('space: $space, ')
+          ..write('artifactTitle: $artifactTitle, ')
+          ..write('artifactTendency: $artifactTendency, ')
+          ..write('nameKana: $nameKana, ')
+          ..write('name: $name, ')
+          ..write('penName: $penName, ')
+          ..write('isManga: $isManga, ')
+          ..write('isNovel: $isNovel, ')
+          ..write('isR18: $isR18, ')
+          ..write('homepageURL: $homepageURL, ')
+          ..write('twitterURL: $twitterURL, ')
+          ..write('pixivURL: $pixivURL, ')
+          ..write('imageURL: $imageURL, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -1186,107 +697,187 @@ class Todo extends DataClass implements Insertable<Todo> {
   @override
   int get hashCode => Object.hash(
     id,
-    priority,
-    title,
-    note,
-    quantity,
-    price,
-    isDone,
-    categoryId,
-    circleId,
+    circleID,
+    space,
+    artifactTitle,
+    artifactTendency,
+    nameKana,
+    name,
+    penName,
+    isManga,
+    isNovel,
+    isR18,
+    homepageURL,
+    twitterURL,
+    pixivURL,
+    imageURL,
+    createdAt,
+    updatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Todo &&
+      (other is CircleInfo &&
           other.id == this.id &&
-          other.priority == this.priority &&
-          other.title == this.title &&
-          other.note == this.note &&
-          other.quantity == this.quantity &&
-          other.price == this.price &&
-          other.isDone == this.isDone &&
-          other.categoryId == this.categoryId &&
-          other.circleId == this.circleId);
+          other.circleID == this.circleID &&
+          other.space == this.space &&
+          other.artifactTitle == this.artifactTitle &&
+          other.artifactTendency == this.artifactTendency &&
+          other.nameKana == this.nameKana &&
+          other.name == this.name &&
+          other.penName == this.penName &&
+          other.isManga == this.isManga &&
+          other.isNovel == this.isNovel &&
+          other.isR18 == this.isR18 &&
+          other.homepageURL == this.homepageURL &&
+          other.twitterURL == this.twitterURL &&
+          other.pixivURL == this.pixivURL &&
+          other.imageURL == this.imageURL &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
-class TodosCompanion extends UpdateCompanion<Todo> {
+class CircleInfosCompanion extends UpdateCompanion<CircleInfo> {
   final Value<int> id;
-  final Value<int> priority;
-  final Value<String> title;
-  final Value<String?> note;
-  final Value<int> quantity;
-  final Value<int> price;
-  final Value<bool> isDone;
-  final Value<int?> categoryId;
-  final Value<int?> circleId;
-  const TodosCompanion({
+  final Value<String> circleID;
+  final Value<String> space;
+  final Value<String> artifactTitle;
+  final Value<String> artifactTendency;
+  final Value<String> nameKana;
+  final Value<String> name;
+  final Value<String> penName;
+  final Value<bool> isManga;
+  final Value<bool> isNovel;
+  final Value<bool> isR18;
+  final Value<String> homepageURL;
+  final Value<String> twitterURL;
+  final Value<String> pixivURL;
+  final Value<String> imageURL;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const CircleInfosCompanion({
     this.id = const Value.absent(),
-    this.priority = const Value.absent(),
-    this.title = const Value.absent(),
-    this.note = const Value.absent(),
-    this.quantity = const Value.absent(),
-    this.price = const Value.absent(),
-    this.isDone = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.circleId = const Value.absent(),
+    this.circleID = const Value.absent(),
+    this.space = const Value.absent(),
+    this.artifactTitle = const Value.absent(),
+    this.artifactTendency = const Value.absent(),
+    this.nameKana = const Value.absent(),
+    this.name = const Value.absent(),
+    this.penName = const Value.absent(),
+    this.isManga = const Value.absent(),
+    this.isNovel = const Value.absent(),
+    this.isR18 = const Value.absent(),
+    this.homepageURL = const Value.absent(),
+    this.twitterURL = const Value.absent(),
+    this.pixivURL = const Value.absent(),
+    this.imageURL = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
-  TodosCompanion.insert({
+  CircleInfosCompanion.insert({
     this.id = const Value.absent(),
-    this.priority = const Value.absent(),
-    required String title,
-    this.note = const Value.absent(),
-    this.quantity = const Value.absent(),
-    this.price = const Value.absent(),
-    this.isDone = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.circleId = const Value.absent(),
-  }) : title = Value(title);
-  static Insertable<Todo> custom({
+    required String circleID,
+    required String space,
+    required String artifactTitle,
+    required String artifactTendency,
+    required String nameKana,
+    required String name,
+    this.penName = const Value.absent(),
+    required bool isManga,
+    required bool isNovel,
+    required bool isR18,
+    this.homepageURL = const Value.absent(),
+    this.twitterURL = const Value.absent(),
+    this.pixivURL = const Value.absent(),
+    this.imageURL = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : circleID = Value(circleID),
+       space = Value(space),
+       artifactTitle = Value(artifactTitle),
+       artifactTendency = Value(artifactTendency),
+       nameKana = Value(nameKana),
+       name = Value(name),
+       isManga = Value(isManga),
+       isNovel = Value(isNovel),
+       isR18 = Value(isR18);
+  static Insertable<CircleInfo> custom({
     Expression<int>? id,
-    Expression<int>? priority,
-    Expression<String>? title,
-    Expression<String>? note,
-    Expression<int>? quantity,
-    Expression<int>? price,
-    Expression<bool>? isDone,
-    Expression<int>? categoryId,
-    Expression<int>? circleId,
+    Expression<String>? circleID,
+    Expression<String>? space,
+    Expression<String>? artifactTitle,
+    Expression<String>? artifactTendency,
+    Expression<String>? nameKana,
+    Expression<String>? name,
+    Expression<String>? penName,
+    Expression<bool>? isManga,
+    Expression<bool>? isNovel,
+    Expression<bool>? isR18,
+    Expression<String>? homepageURL,
+    Expression<String>? twitterURL,
+    Expression<String>? pixivURL,
+    Expression<String>? imageURL,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (priority != null) 'priority': priority,
-      if (title != null) 'title': title,
-      if (note != null) 'note': note,
-      if (quantity != null) 'quantity': quantity,
-      if (price != null) 'price': price,
-      if (isDone != null) 'is_done': isDone,
-      if (categoryId != null) 'category_id': categoryId,
-      if (circleId != null) 'circle_id': circleId,
+      if (circleID != null) 'circle_i_d': circleID,
+      if (space != null) 'space': space,
+      if (artifactTitle != null) 'artifact_title': artifactTitle,
+      if (artifactTendency != null) 'artifact_tendency': artifactTendency,
+      if (nameKana != null) 'name_kana': nameKana,
+      if (name != null) 'name': name,
+      if (penName != null) 'pen_name': penName,
+      if (isManga != null) 'is_manga': isManga,
+      if (isNovel != null) 'is_novel': isNovel,
+      if (isR18 != null) 'is_r18': isR18,
+      if (homepageURL != null) 'homepage_u_r_l': homepageURL,
+      if (twitterURL != null) 'twitter_u_r_l': twitterURL,
+      if (pixivURL != null) 'pixiv_u_r_l': pixivURL,
+      if (imageURL != null) 'image_u_r_l': imageURL,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
-  TodosCompanion copyWith({
+  CircleInfosCompanion copyWith({
     Value<int>? id,
-    Value<int>? priority,
-    Value<String>? title,
-    Value<String?>? note,
-    Value<int>? quantity,
-    Value<int>? price,
-    Value<bool>? isDone,
-    Value<int?>? categoryId,
-    Value<int?>? circleId,
+    Value<String>? circleID,
+    Value<String>? space,
+    Value<String>? artifactTitle,
+    Value<String>? artifactTendency,
+    Value<String>? nameKana,
+    Value<String>? name,
+    Value<String>? penName,
+    Value<bool>? isManga,
+    Value<bool>? isNovel,
+    Value<bool>? isR18,
+    Value<String>? homepageURL,
+    Value<String>? twitterURL,
+    Value<String>? pixivURL,
+    Value<String>? imageURL,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
   }) {
-    return TodosCompanion(
+    return CircleInfosCompanion(
       id: id ?? this.id,
-      priority: priority ?? this.priority,
-      title: title ?? this.title,
-      note: note ?? this.note,
-      quantity: quantity ?? this.quantity,
-      price: price ?? this.price,
-      isDone: isDone ?? this.isDone,
-      categoryId: categoryId ?? this.categoryId,
-      circleId: circleId ?? this.circleId,
+      circleID: circleID ?? this.circleID,
+      space: space ?? this.space,
+      artifactTitle: artifactTitle ?? this.artifactTitle,
+      artifactTendency: artifactTendency ?? this.artifactTendency,
+      nameKana: nameKana ?? this.nameKana,
+      name: name ?? this.name,
+      penName: penName ?? this.penName,
+      isManga: isManga ?? this.isManga,
+      isNovel: isNovel ?? this.isNovel,
+      isR18: isR18 ?? this.isR18,
+      homepageURL: homepageURL ?? this.homepageURL,
+      twitterURL: twitterURL ?? this.twitterURL,
+      pixivURL: pixivURL ?? this.pixivURL,
+      imageURL: imageURL ?? this.imageURL,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -1296,113 +887,137 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (priority.present) {
-      map['priority'] = Variable<int>(priority.value);
+    if (circleID.present) {
+      map['circle_i_d'] = Variable<String>(circleID.value);
     }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
+    if (space.present) {
+      map['space'] = Variable<String>(space.value);
     }
-    if (note.present) {
-      map['note'] = Variable<String>(note.value);
+    if (artifactTitle.present) {
+      map['artifact_title'] = Variable<String>(artifactTitle.value);
     }
-    if (quantity.present) {
-      map['quantity'] = Variable<int>(quantity.value);
+    if (artifactTendency.present) {
+      map['artifact_tendency'] = Variable<String>(artifactTendency.value);
     }
-    if (price.present) {
-      map['price'] = Variable<int>(price.value);
+    if (nameKana.present) {
+      map['name_kana'] = Variable<String>(nameKana.value);
     }
-    if (isDone.present) {
-      map['is_done'] = Variable<bool>(isDone.value);
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
-    if (categoryId.present) {
-      map['category_id'] = Variable<int>(categoryId.value);
+    if (penName.present) {
+      map['pen_name'] = Variable<String>(penName.value);
     }
-    if (circleId.present) {
-      map['circle_id'] = Variable<int>(circleId.value);
+    if (isManga.present) {
+      map['is_manga'] = Variable<bool>(isManga.value);
+    }
+    if (isNovel.present) {
+      map['is_novel'] = Variable<bool>(isNovel.value);
+    }
+    if (isR18.present) {
+      map['is_r18'] = Variable<bool>(isR18.value);
+    }
+    if (homepageURL.present) {
+      map['homepage_u_r_l'] = Variable<String>(homepageURL.value);
+    }
+    if (twitterURL.present) {
+      map['twitter_u_r_l'] = Variable<String>(twitterURL.value);
+    }
+    if (pixivURL.present) {
+      map['pixiv_u_r_l'] = Variable<String>(pixivURL.value);
+    }
+    if (imageURL.present) {
+      map['image_u_r_l'] = Variable<String>(imageURL.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('TodosCompanion(')
+    return (StringBuffer('CircleInfosCompanion(')
           ..write('id: $id, ')
-          ..write('priority: $priority, ')
-          ..write('title: $title, ')
-          ..write('note: $note, ')
-          ..write('quantity: $quantity, ')
-          ..write('price: $price, ')
-          ..write('isDone: $isDone, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('circleId: $circleId')
+          ..write('circleID: $circleID, ')
+          ..write('space: $space, ')
+          ..write('artifactTitle: $artifactTitle, ')
+          ..write('artifactTendency: $artifactTendency, ')
+          ..write('nameKana: $nameKana, ')
+          ..write('name: $name, ')
+          ..write('penName: $penName, ')
+          ..write('isManga: $isManga, ')
+          ..write('isNovel: $isNovel, ')
+          ..write('isR18: $isR18, ')
+          ..write('homepageURL: $homepageURL, ')
+          ..write('twitterURL: $twitterURL, ')
+          ..write('pixivURL: $pixivURL, ')
+          ..write('imageURL: $imageURL, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 }
 
-abstract class _$Database extends GeneratedDatabase {
-  _$Database(QueryExecutor e) : super(e);
-  $DatabaseManager get managers => $DatabaseManager(this);
-  late final $BuildingsTable buildings = $BuildingsTable(this);
-  late final $CategoriesTable categories = $CategoriesTable(this);
-  late final $CirclesTable circles = $CirclesTable(this);
-  late final $TodosTable todos = $TodosTable(this);
-  late final BuildingDao buildingDao = BuildingDao(this as Database);
-  late final TodoDao todoDao = TodoDao(this as Database);
-  late final CategoryDao categoryDao = CategoryDao(this as Database);
-  late final CircleDao circleDao = CircleDao(this as Database);
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $CircleInfosTable circleInfos = $CircleInfosTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [
-    buildings,
-    categories,
-    circles,
-    todos,
-  ];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [circleInfos];
 }
 
-typedef $$BuildingsTableCreateCompanionBuilder =
-    BuildingsCompanion Function({
+typedef $$CircleInfosTableCreateCompanionBuilder =
+    CircleInfosCompanion Function({
       Value<int> id,
+      required String circleID,
+      required String space,
+      required String artifactTitle,
+      required String artifactTendency,
+      required String nameKana,
       required String name,
-      required Uint8List content,
+      Value<String> penName,
+      required bool isManga,
+      required bool isNovel,
+      required bool isR18,
+      Value<String> homepageURL,
+      Value<String> twitterURL,
+      Value<String> pixivURL,
+      Value<String> imageURL,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
-typedef $$BuildingsTableUpdateCompanionBuilder =
-    BuildingsCompanion Function({
+typedef $$CircleInfosTableUpdateCompanionBuilder =
+    CircleInfosCompanion Function({
       Value<int> id,
+      Value<String> circleID,
+      Value<String> space,
+      Value<String> artifactTitle,
+      Value<String> artifactTendency,
+      Value<String> nameKana,
       Value<String> name,
-      Value<Uint8List> content,
+      Value<String> penName,
+      Value<bool> isManga,
+      Value<bool> isNovel,
+      Value<bool> isR18,
+      Value<String> homepageURL,
+      Value<String> twitterURL,
+      Value<String> pixivURL,
+      Value<String> imageURL,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
 
-final class $$BuildingsTableReferences
-    extends BaseReferences<_$Database, $BuildingsTable, Building> {
-  $$BuildingsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$CirclesTable, List<Circle>> _circlesRefsTable(
-    _$Database db,
-  ) => MultiTypedResultKey.fromTable(
-    db.circles,
-    aliasName: $_aliasNameGenerator(db.buildings.id, db.circles.buildingId),
-  );
-
-  $$CirclesTableProcessedTableManager get circlesRefs {
-    final manager = $$CirclesTableTableManager(
-      $_db,
-      $_db.circles,
-    ).filter((f) => f.buildingId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_circlesRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$BuildingsTableFilterComposer
-    extends Composer<_$Database, $BuildingsTable> {
-  $$BuildingsTableFilterComposer({
+class $$CircleInfosTableFilterComposer
+    extends Composer<_$AppDatabase, $CircleInfosTable> {
+  $$CircleInfosTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1414,45 +1029,90 @@ class $$BuildingsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get circleID => $composableBuilder(
+    column: $table.circleID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get space => $composableBuilder(
+    column: $table.space,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get artifactTitle => $composableBuilder(
+    column: $table.artifactTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get artifactTendency => $composableBuilder(
+    column: $table.artifactTendency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameKana => $composableBuilder(
+    column: $table.nameKana,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<Uint8List> get content => $composableBuilder(
-    column: $table.content,
+  ColumnFilters<String> get penName => $composableBuilder(
+    column: $table.penName,
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> circlesRefs(
-    Expression<bool> Function($$CirclesTableFilterComposer f) f,
-  ) {
-    final $$CirclesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.circles,
-      getReferencedColumn: (t) => t.buildingId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CirclesTableFilterComposer(
-            $db: $db,
-            $table: $db.circles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
+  ColumnFilters<bool> get isManga => $composableBuilder(
+    column: $table.isManga,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isNovel => $composableBuilder(
+    column: $table.isNovel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isR18 => $composableBuilder(
+    column: $table.isR18,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get homepageURL => $composableBuilder(
+    column: $table.homepageURL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get twitterURL => $composableBuilder(
+    column: $table.twitterURL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get pixivURL => $composableBuilder(
+    column: $table.pixivURL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageURL => $composableBuilder(
+    column: $table.imageURL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
-class $$BuildingsTableOrderingComposer
-    extends Composer<_$Database, $BuildingsTable> {
-  $$BuildingsTableOrderingComposer({
+class $$CircleInfosTableOrderingComposer
+    extends Composer<_$AppDatabase, $CircleInfosTable> {
+  $$CircleInfosTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1464,20 +1124,90 @@ class $$BuildingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get circleID => $composableBuilder(
+    column: $table.circleID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get space => $composableBuilder(
+    column: $table.space,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get artifactTitle => $composableBuilder(
+    column: $table.artifactTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get artifactTendency => $composableBuilder(
+    column: $table.artifactTendency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameKana => $composableBuilder(
+    column: $table.nameKana,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<Uint8List> get content => $composableBuilder(
-    column: $table.content,
+  ColumnOrderings<String> get penName => $composableBuilder(
+    column: $table.penName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isManga => $composableBuilder(
+    column: $table.isManga,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isNovel => $composableBuilder(
+    column: $table.isNovel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isR18 => $composableBuilder(
+    column: $table.isR18,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get homepageURL => $composableBuilder(
+    column: $table.homepageURL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get twitterURL => $composableBuilder(
+    column: $table.twitterURL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get pixivURL => $composableBuilder(
+    column: $table.pixivURL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageURL => $composableBuilder(
+    column: $table.imageURL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$BuildingsTableAnnotationComposer
-    extends Composer<_$Database, $BuildingsTable> {
-  $$BuildingsTableAnnotationComposer({
+class $$CircleInfosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CircleInfosTable> {
+  $$CircleInfosTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1487,680 +1217,168 @@ class $$BuildingsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get circleID =>
+      $composableBuilder(column: $table.circleID, builder: (column) => column);
+
+  GeneratedColumn<String> get space =>
+      $composableBuilder(column: $table.space, builder: (column) => column);
+
+  GeneratedColumn<String> get artifactTitle => $composableBuilder(
+    column: $table.artifactTitle,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get artifactTendency => $composableBuilder(
+    column: $table.artifactTendency,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameKana =>
+      $composableBuilder(column: $table.nameKana, builder: (column) => column);
+
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<Uint8List> get content =>
-      $composableBuilder(column: $table.content, builder: (column) => column);
+  GeneratedColumn<String> get penName =>
+      $composableBuilder(column: $table.penName, builder: (column) => column);
 
-  Expression<T> circlesRefs<T extends Object>(
-    Expression<T> Function($$CirclesTableAnnotationComposer a) f,
-  ) {
-    final $$CirclesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.circles,
-      getReferencedColumn: (t) => t.buildingId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CirclesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.circles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
+  GeneratedColumn<bool> get isManga =>
+      $composableBuilder(column: $table.isManga, builder: (column) => column);
+
+  GeneratedColumn<bool> get isNovel =>
+      $composableBuilder(column: $table.isNovel, builder: (column) => column);
+
+  GeneratedColumn<bool> get isR18 =>
+      $composableBuilder(column: $table.isR18, builder: (column) => column);
+
+  GeneratedColumn<String> get homepageURL => $composableBuilder(
+    column: $table.homepageURL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get twitterURL => $composableBuilder(
+    column: $table.twitterURL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get pixivURL =>
+      $composableBuilder(column: $table.pixivURL, builder: (column) => column);
+
+  GeneratedColumn<String> get imageURL =>
+      $composableBuilder(column: $table.imageURL, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$BuildingsTableTableManager
+class $$CircleInfosTableTableManager
     extends
         RootTableManager<
-          _$Database,
-          $BuildingsTable,
-          Building,
-          $$BuildingsTableFilterComposer,
-          $$BuildingsTableOrderingComposer,
-          $$BuildingsTableAnnotationComposer,
-          $$BuildingsTableCreateCompanionBuilder,
-          $$BuildingsTableUpdateCompanionBuilder,
-          (Building, $$BuildingsTableReferences),
-          Building,
-          PrefetchHooks Function({bool circlesRefs})
+          _$AppDatabase,
+          $CircleInfosTable,
+          CircleInfo,
+          $$CircleInfosTableFilterComposer,
+          $$CircleInfosTableOrderingComposer,
+          $$CircleInfosTableAnnotationComposer,
+          $$CircleInfosTableCreateCompanionBuilder,
+          $$CircleInfosTableUpdateCompanionBuilder,
+          (
+            CircleInfo,
+            BaseReferences<_$AppDatabase, $CircleInfosTable, CircleInfo>,
+          ),
+          CircleInfo,
+          PrefetchHooks Function()
         > {
-  $$BuildingsTableTableManager(_$Database db, $BuildingsTable table)
+  $$CircleInfosTableTableManager(_$AppDatabase db, $CircleInfosTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer:
-              () => $$BuildingsTableFilterComposer($db: db, $table: table),
+              () => $$CircleInfosTableFilterComposer($db: db, $table: table),
           createOrderingComposer:
-              () => $$BuildingsTableOrderingComposer($db: db, $table: table),
+              () => $$CircleInfosTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer:
-              () => $$BuildingsTableAnnotationComposer($db: db, $table: table),
+              () =>
+                  $$CircleInfosTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<String> circleID = const Value.absent(),
+                Value<String> space = const Value.absent(),
+                Value<String> artifactTitle = const Value.absent(),
+                Value<String> artifactTendency = const Value.absent(),
+                Value<String> nameKana = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<Uint8List> content = const Value.absent(),
-              }) => BuildingsCompanion(id: id, name: name, content: content),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required String name,
-                required Uint8List content,
-              }) => BuildingsCompanion.insert(
+                Value<String> penName = const Value.absent(),
+                Value<bool> isManga = const Value.absent(),
+                Value<bool> isNovel = const Value.absent(),
+                Value<bool> isR18 = const Value.absent(),
+                Value<String> homepageURL = const Value.absent(),
+                Value<String> twitterURL = const Value.absent(),
+                Value<String> pixivURL = const Value.absent(),
+                Value<String> imageURL = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CircleInfosCompanion(
                 id: id,
+                circleID: circleID,
+                space: space,
+                artifactTitle: artifactTitle,
+                artifactTendency: artifactTendency,
+                nameKana: nameKana,
                 name: name,
-                content: content,
-              ),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          $$BuildingsTableReferences(db, table, e),
-                        ),
-                      )
-                      .toList(),
-          prefetchHooksCallback: ({circlesRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (circlesRefs) db.circles],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (circlesRefs)
-                    await $_getPrefetchedData<
-                      Building,
-                      $BuildingsTable,
-                      Circle
-                    >(
-                      currentTable: table,
-                      referencedTable: $$BuildingsTableReferences
-                          ._circlesRefsTable(db),
-                      managerFromTypedResult:
-                          (p0) =>
-                              $$BuildingsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).circlesRefs,
-                      referencedItemsForCurrentItem:
-                          (item, referencedItems) => referencedItems.where(
-                            (e) => e.buildingId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$BuildingsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $BuildingsTable,
-      Building,
-      $$BuildingsTableFilterComposer,
-      $$BuildingsTableOrderingComposer,
-      $$BuildingsTableAnnotationComposer,
-      $$BuildingsTableCreateCompanionBuilder,
-      $$BuildingsTableUpdateCompanionBuilder,
-      (Building, $$BuildingsTableReferences),
-      Building,
-      PrefetchHooks Function({bool circlesRefs})
-    >;
-typedef $$CategoriesTableCreateCompanionBuilder =
-    CategoriesCompanion Function({Value<int> id, required String name});
-typedef $$CategoriesTableUpdateCompanionBuilder =
-    CategoriesCompanion Function({Value<int> id, Value<String> name});
-
-final class $$CategoriesTableReferences
-    extends BaseReferences<_$Database, $CategoriesTable, Category> {
-  $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$TodosTable, List<Todo>> _todosRefsTable(
-    _$Database db,
-  ) => MultiTypedResultKey.fromTable(
-    db.todos,
-    aliasName: $_aliasNameGenerator(db.categories.id, db.todos.categoryId),
-  );
-
-  $$TodosTableProcessedTableManager get todosRefs {
-    final manager = $$TodosTableTableManager(
-      $_db,
-      $_db.todos,
-    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_todosRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$CategoriesTableFilterComposer
-    extends Composer<_$Database, $CategoriesTable> {
-  $$CategoriesTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  Expression<bool> todosRefs(
-    Expression<bool> Function($$TodosTableFilterComposer f) f,
-  ) {
-    final $$TodosTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.todos,
-      getReferencedColumn: (t) => t.categoryId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodosTableFilterComposer(
-            $db: $db,
-            $table: $db.todos,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$CategoriesTableOrderingComposer
-    extends Composer<_$Database, $CategoriesTable> {
-  $$CategoriesTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$CategoriesTableAnnotationComposer
-    extends Composer<_$Database, $CategoriesTable> {
-  $$CategoriesTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  Expression<T> todosRefs<T extends Object>(
-    Expression<T> Function($$TodosTableAnnotationComposer a) f,
-  ) {
-    final $$TodosTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.todos,
-      getReferencedColumn: (t) => t.categoryId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodosTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todos,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$CategoriesTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $CategoriesTable,
-          Category,
-          $$CategoriesTableFilterComposer,
-          $$CategoriesTableOrderingComposer,
-          $$CategoriesTableAnnotationComposer,
-          $$CategoriesTableCreateCompanionBuilder,
-          $$CategoriesTableUpdateCompanionBuilder,
-          (Category, $$CategoriesTableReferences),
-          Category,
-          PrefetchHooks Function({bool todosRefs})
-        > {
-  $$CategoriesTableTableManager(_$Database db, $CategoriesTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer:
-              () => $$CategoriesTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () => $$CategoriesTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer:
-              () => $$CategoriesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> name = const Value.absent(),
-              }) => CategoriesCompanion(id: id, name: name),
-          createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  CategoriesCompanion.insert(id: id, name: name),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          $$CategoriesTableReferences(db, table, e),
-                        ),
-                      )
-                      .toList(),
-          prefetchHooksCallback: ({todosRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (todosRefs) db.todos],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (todosRefs)
-                    await $_getPrefetchedData<Category, $CategoriesTable, Todo>(
-                      currentTable: table,
-                      referencedTable: $$CategoriesTableReferences
-                          ._todosRefsTable(db),
-                      managerFromTypedResult:
-                          (p0) =>
-                              $$CategoriesTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).todosRefs,
-                      referencedItemsForCurrentItem:
-                          (item, referencedItems) => referencedItems.where(
-                            (e) => e.categoryId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$CategoriesTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $CategoriesTable,
-      Category,
-      $$CategoriesTableFilterComposer,
-      $$CategoriesTableOrderingComposer,
-      $$CategoriesTableAnnotationComposer,
-      $$CategoriesTableCreateCompanionBuilder,
-      $$CategoriesTableUpdateCompanionBuilder,
-      (Category, $$CategoriesTableReferences),
-      Category,
-      PrefetchHooks Function({bool todosRefs})
-    >;
-typedef $$CirclesTableCreateCompanionBuilder =
-    CirclesCompanion Function({
-      Value<int> id,
-      required String block,
-      required int number,
-      required String suffix,
-      Value<int?> buildingId,
-    });
-typedef $$CirclesTableUpdateCompanionBuilder =
-    CirclesCompanion Function({
-      Value<int> id,
-      Value<String> block,
-      Value<int> number,
-      Value<String> suffix,
-      Value<int?> buildingId,
-    });
-
-final class $$CirclesTableReferences
-    extends BaseReferences<_$Database, $CirclesTable, Circle> {
-  $$CirclesTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $BuildingsTable _buildingIdTable(_$Database db) =>
-      db.buildings.createAlias(
-        $_aliasNameGenerator(db.circles.buildingId, db.buildings.id),
-      );
-
-  $$BuildingsTableProcessedTableManager? get buildingId {
-    final $_column = $_itemColumn<int>('building_id');
-    if ($_column == null) return null;
-    final manager = $$BuildingsTableTableManager(
-      $_db,
-      $_db.buildings,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_buildingIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$TodosTable, List<Todo>> _todosRefsTable(
-    _$Database db,
-  ) => MultiTypedResultKey.fromTable(
-    db.todos,
-    aliasName: $_aliasNameGenerator(db.circles.id, db.todos.circleId),
-  );
-
-  $$TodosTableProcessedTableManager get todosRefs {
-    final manager = $$TodosTableTableManager(
-      $_db,
-      $_db.todos,
-    ).filter((f) => f.circleId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_todosRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$CirclesTableFilterComposer extends Composer<_$Database, $CirclesTable> {
-  $$CirclesTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get block => $composableBuilder(
-    column: $table.block,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get number => $composableBuilder(
-    column: $table.number,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get suffix => $composableBuilder(
-    column: $table.suffix,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$BuildingsTableFilterComposer get buildingId {
-    final $$BuildingsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.buildingId,
-      referencedTable: $db.buildings,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BuildingsTableFilterComposer(
-            $db: $db,
-            $table: $db.buildings,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> todosRefs(
-    Expression<bool> Function($$TodosTableFilterComposer f) f,
-  ) {
-    final $$TodosTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.todos,
-      getReferencedColumn: (t) => t.circleId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodosTableFilterComposer(
-            $db: $db,
-            $table: $db.todos,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$CirclesTableOrderingComposer
-    extends Composer<_$Database, $CirclesTable> {
-  $$CirclesTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get block => $composableBuilder(
-    column: $table.block,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get number => $composableBuilder(
-    column: $table.number,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get suffix => $composableBuilder(
-    column: $table.suffix,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$BuildingsTableOrderingComposer get buildingId {
-    final $$BuildingsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.buildingId,
-      referencedTable: $db.buildings,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BuildingsTableOrderingComposer(
-            $db: $db,
-            $table: $db.buildings,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$CirclesTableAnnotationComposer
-    extends Composer<_$Database, $CirclesTable> {
-  $$CirclesTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get block =>
-      $composableBuilder(column: $table.block, builder: (column) => column);
-
-  GeneratedColumn<int> get number =>
-      $composableBuilder(column: $table.number, builder: (column) => column);
-
-  GeneratedColumn<String> get suffix =>
-      $composableBuilder(column: $table.suffix, builder: (column) => column);
-
-  $$BuildingsTableAnnotationComposer get buildingId {
-    final $$BuildingsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.buildingId,
-      referencedTable: $db.buildings,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BuildingsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.buildings,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> todosRefs<T extends Object>(
-    Expression<T> Function($$TodosTableAnnotationComposer a) f,
-  ) {
-    final $$TodosTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.todos,
-      getReferencedColumn: (t) => t.circleId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodosTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todos,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$CirclesTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $CirclesTable,
-          Circle,
-          $$CirclesTableFilterComposer,
-          $$CirclesTableOrderingComposer,
-          $$CirclesTableAnnotationComposer,
-          $$CirclesTableCreateCompanionBuilder,
-          $$CirclesTableUpdateCompanionBuilder,
-          (Circle, $$CirclesTableReferences),
-          Circle,
-          PrefetchHooks Function({bool buildingId, bool todosRefs})
-        > {
-  $$CirclesTableTableManager(_$Database db, $CirclesTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer:
-              () => $$CirclesTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () => $$CirclesTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer:
-              () => $$CirclesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> block = const Value.absent(),
-                Value<int> number = const Value.absent(),
-                Value<String> suffix = const Value.absent(),
-                Value<int?> buildingId = const Value.absent(),
-              }) => CirclesCompanion(
-                id: id,
-                block: block,
-                number: number,
-                suffix: suffix,
-                buildingId: buildingId,
+                penName: penName,
+                isManga: isManga,
+                isNovel: isNovel,
+                isR18: isR18,
+                homepageURL: homepageURL,
+                twitterURL: twitterURL,
+                pixivURL: pixivURL,
+                imageURL: imageURL,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required String block,
-                required int number,
-                required String suffix,
-                Value<int?> buildingId = const Value.absent(),
-              }) => CirclesCompanion.insert(
+                required String circleID,
+                required String space,
+                required String artifactTitle,
+                required String artifactTendency,
+                required String nameKana,
+                required String name,
+                Value<String> penName = const Value.absent(),
+                required bool isManga,
+                required bool isNovel,
+                required bool isR18,
+                Value<String> homepageURL = const Value.absent(),
+                Value<String> twitterURL = const Value.absent(),
+                Value<String> pixivURL = const Value.absent(),
+                Value<String> imageURL = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CircleInfosCompanion.insert(
                 id: id,
-                block: block,
-                number: number,
-                suffix: suffix,
-                buildingId: buildingId,
+                circleID: circleID,
+                space: space,
+                artifactTitle: artifactTitle,
+                artifactTendency: artifactTendency,
+                nameKana: nameKana,
+                name: name,
+                penName: penName,
+                isManga: isManga,
+                isNovel: isNovel,
+                isR18: isR18,
+                homepageURL: homepageURL,
+                twitterURL: twitterURL,
+                pixivURL: pixivURL,
+                imageURL: imageURL,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           withReferenceMapper:
               (p0) =>
@@ -2168,565 +1386,36 @@ class $$CirclesTableTableManager
                       .map(
                         (e) => (
                           e.readTable(table),
-                          $$CirclesTableReferences(db, table, e),
+                          BaseReferences(db, table, e),
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({buildingId = false, todosRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (todosRefs) db.todos],
-              addJoins: <
-                T extends TableManagerState<
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic
-                >
-              >(state) {
-                if (buildingId) {
-                  state =
-                      state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.buildingId,
-                            referencedTable: $$CirclesTableReferences
-                                ._buildingIdTable(db),
-                            referencedColumn:
-                                $$CirclesTableReferences
-                                    ._buildingIdTable(db)
-                                    .id,
-                          )
-                          as T;
-                }
-
-                return state;
-              },
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (todosRefs)
-                    await $_getPrefetchedData<Circle, $CirclesTable, Todo>(
-                      currentTable: table,
-                      referencedTable: $$CirclesTableReferences._todosRefsTable(
-                        db,
-                      ),
-                      managerFromTypedResult:
-                          (p0) =>
-                              $$CirclesTableReferences(db, table, p0).todosRefs,
-                      referencedItemsForCurrentItem:
-                          (item, referencedItems) => referencedItems.where(
-                            (e) => e.circleId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
 
-typedef $$CirclesTableProcessedTableManager =
+typedef $$CircleInfosTableProcessedTableManager =
     ProcessedTableManager<
-      _$Database,
-      $CirclesTable,
-      Circle,
-      $$CirclesTableFilterComposer,
-      $$CirclesTableOrderingComposer,
-      $$CirclesTableAnnotationComposer,
-      $$CirclesTableCreateCompanionBuilder,
-      $$CirclesTableUpdateCompanionBuilder,
-      (Circle, $$CirclesTableReferences),
-      Circle,
-      PrefetchHooks Function({bool buildingId, bool todosRefs})
-    >;
-typedef $$TodosTableCreateCompanionBuilder =
-    TodosCompanion Function({
-      Value<int> id,
-      Value<int> priority,
-      required String title,
-      Value<String?> note,
-      Value<int> quantity,
-      Value<int> price,
-      Value<bool> isDone,
-      Value<int?> categoryId,
-      Value<int?> circleId,
-    });
-typedef $$TodosTableUpdateCompanionBuilder =
-    TodosCompanion Function({
-      Value<int> id,
-      Value<int> priority,
-      Value<String> title,
-      Value<String?> note,
-      Value<int> quantity,
-      Value<int> price,
-      Value<bool> isDone,
-      Value<int?> categoryId,
-      Value<int?> circleId,
-    });
-
-final class $$TodosTableReferences
-    extends BaseReferences<_$Database, $TodosTable, Todo> {
-  $$TodosTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $CategoriesTable _categoryIdTable(_$Database db) => db.categories
-      .createAlias($_aliasNameGenerator(db.todos.categoryId, db.categories.id));
-
-  $$CategoriesTableProcessedTableManager? get categoryId {
-    final $_column = $_itemColumn<int>('category_id');
-    if ($_column == null) return null;
-    final manager = $$CategoriesTableTableManager(
-      $_db,
-      $_db.categories,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $CirclesTable _circleIdTable(_$Database db) => db.circles.createAlias(
-    $_aliasNameGenerator(db.todos.circleId, db.circles.id),
-  );
-
-  $$CirclesTableProcessedTableManager? get circleId {
-    final $_column = $_itemColumn<int>('circle_id');
-    if ($_column == null) return null;
-    final manager = $$CirclesTableTableManager(
-      $_db,
-      $_db.circles,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_circleIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$TodosTableFilterComposer extends Composer<_$Database, $TodosTable> {
-  $$TodosTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get priority => $composableBuilder(
-    column: $table.priority,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get note => $composableBuilder(
-    column: $table.note,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get quantity => $composableBuilder(
-    column: $table.quantity,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get price => $composableBuilder(
-    column: $table.price,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isDone => $composableBuilder(
-    column: $table.isDone,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$CategoriesTableFilterComposer get categoryId {
-    final $$CategoriesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.categories,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CategoriesTableFilterComposer(
-            $db: $db,
-            $table: $db.categories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CirclesTableFilterComposer get circleId {
-    final $$CirclesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.circleId,
-      referencedTable: $db.circles,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CirclesTableFilterComposer(
-            $db: $db,
-            $table: $db.circles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$TodosTableOrderingComposer extends Composer<_$Database, $TodosTable> {
-  $$TodosTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get priority => $composableBuilder(
-    column: $table.priority,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get note => $composableBuilder(
-    column: $table.note,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get quantity => $composableBuilder(
-    column: $table.quantity,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get price => $composableBuilder(
-    column: $table.price,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isDone => $composableBuilder(
-    column: $table.isDone,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$CategoriesTableOrderingComposer get categoryId {
-    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.categories,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CategoriesTableOrderingComposer(
-            $db: $db,
-            $table: $db.categories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CirclesTableOrderingComposer get circleId {
-    final $$CirclesTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.circleId,
-      referencedTable: $db.circles,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CirclesTableOrderingComposer(
-            $db: $db,
-            $table: $db.circles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$TodosTableAnnotationComposer extends Composer<_$Database, $TodosTable> {
-  $$TodosTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get priority =>
-      $composableBuilder(column: $table.priority, builder: (column) => column);
-
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
-
-  GeneratedColumn<String> get note =>
-      $composableBuilder(column: $table.note, builder: (column) => column);
-
-  GeneratedColumn<int> get quantity =>
-      $composableBuilder(column: $table.quantity, builder: (column) => column);
-
-  GeneratedColumn<int> get price =>
-      $composableBuilder(column: $table.price, builder: (column) => column);
-
-  GeneratedColumn<bool> get isDone =>
-      $composableBuilder(column: $table.isDone, builder: (column) => column);
-
-  $$CategoriesTableAnnotationComposer get categoryId {
-    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.categories,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CategoriesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.categories,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$CirclesTableAnnotationComposer get circleId {
-    final $$CirclesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.circleId,
-      referencedTable: $db.circles,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CirclesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.circles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$TodosTableTableManager
-    extends
-        RootTableManager<
-          _$Database,
-          $TodosTable,
-          Todo,
-          $$TodosTableFilterComposer,
-          $$TodosTableOrderingComposer,
-          $$TodosTableAnnotationComposer,
-          $$TodosTableCreateCompanionBuilder,
-          $$TodosTableUpdateCompanionBuilder,
-          (Todo, $$TodosTableReferences),
-          Todo,
-          PrefetchHooks Function({bool categoryId, bool circleId})
-        > {
-  $$TodosTableTableManager(_$Database db, $TodosTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer:
-              () => $$TodosTableFilterComposer($db: db, $table: table),
-          createOrderingComposer:
-              () => $$TodosTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer:
-              () => $$TodosTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> priority = const Value.absent(),
-                Value<String> title = const Value.absent(),
-                Value<String?> note = const Value.absent(),
-                Value<int> quantity = const Value.absent(),
-                Value<int> price = const Value.absent(),
-                Value<bool> isDone = const Value.absent(),
-                Value<int?> categoryId = const Value.absent(),
-                Value<int?> circleId = const Value.absent(),
-              }) => TodosCompanion(
-                id: id,
-                priority: priority,
-                title: title,
-                note: note,
-                quantity: quantity,
-                price: price,
-                isDone: isDone,
-                categoryId: categoryId,
-                circleId: circleId,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> priority = const Value.absent(),
-                required String title,
-                Value<String?> note = const Value.absent(),
-                Value<int> quantity = const Value.absent(),
-                Value<int> price = const Value.absent(),
-                Value<bool> isDone = const Value.absent(),
-                Value<int?> categoryId = const Value.absent(),
-                Value<int?> circleId = const Value.absent(),
-              }) => TodosCompanion.insert(
-                id: id,
-                priority: priority,
-                title: title,
-                note: note,
-                quantity: quantity,
-                price: price,
-                isDone: isDone,
-                categoryId: categoryId,
-                circleId: circleId,
-              ),
-          withReferenceMapper:
-              (p0) =>
-                  p0
-                      .map(
-                        (e) => (
-                          e.readTable(table),
-                          $$TodosTableReferences(db, table, e),
-                        ),
-                      )
-                      .toList(),
-          prefetchHooksCallback: ({categoryId = false, circleId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins: <
-                T extends TableManagerState<
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic,
-                  dynamic
-                >
-              >(state) {
-                if (categoryId) {
-                  state =
-                      state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.categoryId,
-                            referencedTable: $$TodosTableReferences
-                                ._categoryIdTable(db),
-                            referencedColumn:
-                                $$TodosTableReferences._categoryIdTable(db).id,
-                          )
-                          as T;
-                }
-                if (circleId) {
-                  state =
-                      state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.circleId,
-                            referencedTable: $$TodosTableReferences
-                                ._circleIdTable(db),
-                            referencedColumn:
-                                $$TodosTableReferences._circleIdTable(db).id,
-                          )
-                          as T;
-                }
-
-                return state;
-              },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$TodosTableProcessedTableManager =
-    ProcessedTableManager<
-      _$Database,
-      $TodosTable,
-      Todo,
-      $$TodosTableFilterComposer,
-      $$TodosTableOrderingComposer,
-      $$TodosTableAnnotationComposer,
-      $$TodosTableCreateCompanionBuilder,
-      $$TodosTableUpdateCompanionBuilder,
-      (Todo, $$TodosTableReferences),
-      Todo,
-      PrefetchHooks Function({bool categoryId, bool circleId})
+      _$AppDatabase,
+      $CircleInfosTable,
+      CircleInfo,
+      $$CircleInfosTableFilterComposer,
+      $$CircleInfosTableOrderingComposer,
+      $$CircleInfosTableAnnotationComposer,
+      $$CircleInfosTableCreateCompanionBuilder,
+      $$CircleInfosTableUpdateCompanionBuilder,
+      (
+        CircleInfo,
+        BaseReferences<_$AppDatabase, $CircleInfosTable, CircleInfo>,
+      ),
+      CircleInfo,
+      PrefetchHooks Function()
     >;
 
-class $DatabaseManager {
-  final _$Database _db;
-  $DatabaseManager(this._db);
-  $$BuildingsTableTableManager get buildings =>
-      $$BuildingsTableTableManager(_db, _db.buildings);
-  $$CategoriesTableTableManager get categories =>
-      $$CategoriesTableTableManager(_db, _db.categories);
-  $$CirclesTableTableManager get circles =>
-      $$CirclesTableTableManager(_db, _db.circles);
-  $$TodosTableTableManager get todos =>
-      $$TodosTableTableManager(_db, _db.todos);
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
+  $$CircleInfosTableTableManager get circleInfos =>
+      $$CircleInfosTableTableManager(_db, _db.circleInfos);
 }
