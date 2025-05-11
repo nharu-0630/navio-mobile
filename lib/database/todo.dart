@@ -15,7 +15,4 @@ class Todos extends Table {
   IntColumn get categoryId =>
       integer().nullable().references(Categories, #id)();
   IntColumn get circleId => integer().nullable().references(Circles, #id)();
-
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }

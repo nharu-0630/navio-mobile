@@ -3,6 +3,253 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+class $BuildingsTable extends Buildings
+    with TableInfo<$BuildingsTable, Building> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BuildingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contentMeta = const VerificationMeta(
+    'content',
+  );
+  @override
+  late final GeneratedColumn<Uint8List> content = GeneratedColumn<Uint8List>(
+    'content',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, content];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'buildings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Building> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(
+        _contentMeta,
+        content.isAcceptableOrUnknown(data['content']!, _contentMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_contentMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Building map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Building(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
+      name:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}name'],
+          )!,
+      content:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.blob,
+            data['${effectivePrefix}content'],
+          )!,
+    );
+  }
+
+  @override
+  $BuildingsTable createAlias(String alias) {
+    return $BuildingsTable(attachedDatabase, alias);
+  }
+}
+
+class Building extends DataClass implements Insertable<Building> {
+  final int id;
+  final String name;
+  final Uint8List content;
+  const Building({required this.id, required this.name, required this.content});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['content'] = Variable<Uint8List>(content);
+    return map;
+  }
+
+  BuildingsCompanion toCompanion(bool nullToAbsent) {
+    return BuildingsCompanion(
+      id: Value(id),
+      name: Value(name),
+      content: Value(content),
+    );
+  }
+
+  factory Building.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Building(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      content: serializer.fromJson<Uint8List>(json['content']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'content': serializer.toJson<Uint8List>(content),
+    };
+  }
+
+  Building copyWith({int? id, String? name, Uint8List? content}) => Building(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    content: content ?? this.content,
+  );
+  Building copyWithCompanion(BuildingsCompanion data) {
+    return Building(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      content: data.content.present ? data.content.value : this.content,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Building(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('content: $content')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, $driftBlobEquality.hash(content));
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Building &&
+          other.id == this.id &&
+          other.name == this.name &&
+          $driftBlobEquality.equals(other.content, this.content));
+}
+
+class BuildingsCompanion extends UpdateCompanion<Building> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<Uint8List> content;
+  const BuildingsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.content = const Value.absent(),
+  });
+  BuildingsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required Uint8List content,
+  }) : name = Value(name),
+       content = Value(content);
+  static Insertable<Building> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<Uint8List>? content,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (content != null) 'content': content,
+    });
+  }
+
+  BuildingsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<Uint8List>? content,
+  }) {
+    return BuildingsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      content: content ?? this.content,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<Uint8List>(content.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BuildingsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('content: $content')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $CategoriesTable extends Categories
     with TableInfo<$CategoriesTable, Category> {
   @override
@@ -237,8 +484,22 @@ class $CirclesTable extends Circles with TableInfo<$CirclesTable, Circle> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _buildingIdMeta = const VerificationMeta(
+    'buildingId',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, block, number, suffix];
+  late final GeneratedColumn<int> buildingId = GeneratedColumn<int>(
+    'building_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES buildings (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, block, number, suffix, buildingId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -278,6 +539,12 @@ class $CirclesTable extends Circles with TableInfo<$CirclesTable, Circle> {
     } else if (isInserting) {
       context.missing(_suffixMeta);
     }
+    if (data.containsKey('building_id')) {
+      context.handle(
+        _buildingIdMeta,
+        buildingId.isAcceptableOrUnknown(data['building_id']!, _buildingIdMeta),
+      );
+    }
     return context;
   }
 
@@ -307,6 +574,10 @@ class $CirclesTable extends Circles with TableInfo<$CirclesTable, Circle> {
             DriftSqlType.string,
             data['${effectivePrefix}suffix'],
           )!,
+      buildingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}building_id'],
+      ),
     );
   }
 
@@ -321,11 +592,13 @@ class Circle extends DataClass implements Insertable<Circle> {
   final String block;
   final int number;
   final String suffix;
+  final int? buildingId;
   const Circle({
     required this.id,
     required this.block,
     required this.number,
     required this.suffix,
+    this.buildingId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -334,6 +607,9 @@ class Circle extends DataClass implements Insertable<Circle> {
     map['block'] = Variable<String>(block);
     map['number'] = Variable<int>(number);
     map['suffix'] = Variable<String>(suffix);
+    if (!nullToAbsent || buildingId != null) {
+      map['building_id'] = Variable<int>(buildingId);
+    }
     return map;
   }
 
@@ -343,6 +619,10 @@ class Circle extends DataClass implements Insertable<Circle> {
       block: Value(block),
       number: Value(number),
       suffix: Value(suffix),
+      buildingId:
+          buildingId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(buildingId),
     );
   }
 
@@ -356,6 +636,7 @@ class Circle extends DataClass implements Insertable<Circle> {
       block: serializer.fromJson<String>(json['block']),
       number: serializer.fromJson<int>(json['number']),
       suffix: serializer.fromJson<String>(json['suffix']),
+      buildingId: serializer.fromJson<int?>(json['buildingId']),
     );
   }
   @override
@@ -366,22 +647,31 @@ class Circle extends DataClass implements Insertable<Circle> {
       'block': serializer.toJson<String>(block),
       'number': serializer.toJson<int>(number),
       'suffix': serializer.toJson<String>(suffix),
+      'buildingId': serializer.toJson<int?>(buildingId),
     };
   }
 
-  Circle copyWith({int? id, String? block, int? number, String? suffix}) =>
-      Circle(
-        id: id ?? this.id,
-        block: block ?? this.block,
-        number: number ?? this.number,
-        suffix: suffix ?? this.suffix,
-      );
+  Circle copyWith({
+    int? id,
+    String? block,
+    int? number,
+    String? suffix,
+    Value<int?> buildingId = const Value.absent(),
+  }) => Circle(
+    id: id ?? this.id,
+    block: block ?? this.block,
+    number: number ?? this.number,
+    suffix: suffix ?? this.suffix,
+    buildingId: buildingId.present ? buildingId.value : this.buildingId,
+  );
   Circle copyWithCompanion(CirclesCompanion data) {
     return Circle(
       id: data.id.present ? data.id.value : this.id,
       block: data.block.present ? data.block.value : this.block,
       number: data.number.present ? data.number.value : this.number,
       suffix: data.suffix.present ? data.suffix.value : this.suffix,
+      buildingId:
+          data.buildingId.present ? data.buildingId.value : this.buildingId,
     );
   }
 
@@ -391,13 +681,14 @@ class Circle extends DataClass implements Insertable<Circle> {
           ..write('id: $id, ')
           ..write('block: $block, ')
           ..write('number: $number, ')
-          ..write('suffix: $suffix')
+          ..write('suffix: $suffix, ')
+          ..write('buildingId: $buildingId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, block, number, suffix);
+  int get hashCode => Object.hash(id, block, number, suffix, buildingId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -405,7 +696,8 @@ class Circle extends DataClass implements Insertable<Circle> {
           other.id == this.id &&
           other.block == this.block &&
           other.number == this.number &&
-          other.suffix == this.suffix);
+          other.suffix == this.suffix &&
+          other.buildingId == this.buildingId);
 }
 
 class CirclesCompanion extends UpdateCompanion<Circle> {
@@ -413,17 +705,20 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
   final Value<String> block;
   final Value<int> number;
   final Value<String> suffix;
+  final Value<int?> buildingId;
   const CirclesCompanion({
     this.id = const Value.absent(),
     this.block = const Value.absent(),
     this.number = const Value.absent(),
     this.suffix = const Value.absent(),
+    this.buildingId = const Value.absent(),
   });
   CirclesCompanion.insert({
     this.id = const Value.absent(),
     required String block,
     required int number,
     required String suffix,
+    this.buildingId = const Value.absent(),
   }) : block = Value(block),
        number = Value(number),
        suffix = Value(suffix);
@@ -432,12 +727,14 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
     Expression<String>? block,
     Expression<int>? number,
     Expression<String>? suffix,
+    Expression<int>? buildingId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (block != null) 'block': block,
       if (number != null) 'number': number,
       if (suffix != null) 'suffix': suffix,
+      if (buildingId != null) 'building_id': buildingId,
     });
   }
 
@@ -446,12 +743,14 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
     Value<String>? block,
     Value<int>? number,
     Value<String>? suffix,
+    Value<int?>? buildingId,
   }) {
     return CirclesCompanion(
       id: id ?? this.id,
       block: block ?? this.block,
       number: number ?? this.number,
       suffix: suffix ?? this.suffix,
+      buildingId: buildingId ?? this.buildingId,
     );
   }
 
@@ -470,6 +769,9 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
     if (suffix.present) {
       map['suffix'] = Variable<String>(suffix.value);
     }
+    if (buildingId.present) {
+      map['building_id'] = Variable<int>(buildingId.value);
+    }
     return map;
   }
 
@@ -479,7 +781,8 @@ class CirclesCompanion extends UpdateCompanion<Circle> {
           ..write('id: $id, ')
           ..write('block: $block, ')
           ..write('number: $number, ')
-          ..write('suffix: $suffix')
+          ..write('suffix: $suffix, ')
+          ..write('buildingId: $buildingId')
           ..write(')'))
         .toString();
   }
@@ -596,30 +899,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
       'REFERENCES circles (id)',
     ),
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -631,8 +910,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
     isDone,
     categoryId,
     circleId,
-    createdAt,
-    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -699,18 +976,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
         circleId.isAcceptableOrUnknown(data['circle_id']!, _circleIdMeta),
       );
     }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
     return context;
   }
 
@@ -762,16 +1027,6 @@ class $TodosTable extends Todos with TableInfo<$TodosTable, Todo> {
         DriftSqlType.int,
         data['${effectivePrefix}circle_id'],
       ),
-      createdAt:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
-            data['${effectivePrefix}created_at'],
-          )!,
-      updatedAt:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.dateTime,
-            data['${effectivePrefix}updated_at'],
-          )!,
     );
   }
 
@@ -791,8 +1046,6 @@ class Todo extends DataClass implements Insertable<Todo> {
   final bool isDone;
   final int? categoryId;
   final int? circleId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   const Todo({
     required this.id,
     required this.priority,
@@ -803,8 +1056,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     required this.isDone,
     this.categoryId,
     this.circleId,
-    required this.createdAt,
-    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -824,8 +1075,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     if (!nullToAbsent || circleId != null) {
       map['circle_id'] = Variable<int>(circleId);
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -846,8 +1095,6 @@ class Todo extends DataClass implements Insertable<Todo> {
           circleId == null && nullToAbsent
               ? const Value.absent()
               : Value(circleId),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
     );
   }
 
@@ -866,8 +1113,6 @@ class Todo extends DataClass implements Insertable<Todo> {
       isDone: serializer.fromJson<bool>(json['isDone']),
       categoryId: serializer.fromJson<int?>(json['categoryId']),
       circleId: serializer.fromJson<int?>(json['circleId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -883,8 +1128,6 @@ class Todo extends DataClass implements Insertable<Todo> {
       'isDone': serializer.toJson<bool>(isDone),
       'categoryId': serializer.toJson<int?>(categoryId),
       'circleId': serializer.toJson<int?>(circleId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -898,8 +1141,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     bool? isDone,
     Value<int?> categoryId = const Value.absent(),
     Value<int?> circleId = const Value.absent(),
-    DateTime? createdAt,
-    DateTime? updatedAt,
   }) => Todo(
     id: id ?? this.id,
     priority: priority ?? this.priority,
@@ -910,8 +1151,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     isDone: isDone ?? this.isDone,
     categoryId: categoryId.present ? categoryId.value : this.categoryId,
     circleId: circleId.present ? circleId.value : this.circleId,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
   );
   Todo copyWithCompanion(TodosCompanion data) {
     return Todo(
@@ -925,8 +1164,6 @@ class Todo extends DataClass implements Insertable<Todo> {
       categoryId:
           data.categoryId.present ? data.categoryId.value : this.categoryId,
       circleId: data.circleId.present ? data.circleId.value : this.circleId,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -941,9 +1178,7 @@ class Todo extends DataClass implements Insertable<Todo> {
           ..write('price: $price, ')
           ..write('isDone: $isDone, ')
           ..write('categoryId: $categoryId, ')
-          ..write('circleId: $circleId, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('circleId: $circleId')
           ..write(')'))
         .toString();
   }
@@ -959,8 +1194,6 @@ class Todo extends DataClass implements Insertable<Todo> {
     isDone,
     categoryId,
     circleId,
-    createdAt,
-    updatedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -974,9 +1207,7 @@ class Todo extends DataClass implements Insertable<Todo> {
           other.price == this.price &&
           other.isDone == this.isDone &&
           other.categoryId == this.categoryId &&
-          other.circleId == this.circleId &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.circleId == this.circleId);
 }
 
 class TodosCompanion extends UpdateCompanion<Todo> {
@@ -989,8 +1220,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
   final Value<bool> isDone;
   final Value<int?> categoryId;
   final Value<int?> circleId;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
   const TodosCompanion({
     this.id = const Value.absent(),
     this.priority = const Value.absent(),
@@ -1001,8 +1230,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     this.isDone = const Value.absent(),
     this.categoryId = const Value.absent(),
     this.circleId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
   });
   TodosCompanion.insert({
     this.id = const Value.absent(),
@@ -1014,8 +1241,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     this.isDone = const Value.absent(),
     this.categoryId = const Value.absent(),
     this.circleId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
   }) : title = Value(title);
   static Insertable<Todo> custom({
     Expression<int>? id,
@@ -1027,8 +1252,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     Expression<bool>? isDone,
     Expression<int>? categoryId,
     Expression<int>? circleId,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1040,8 +1263,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
       if (isDone != null) 'is_done': isDone,
       if (categoryId != null) 'category_id': categoryId,
       if (circleId != null) 'circle_id': circleId,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
@@ -1055,8 +1276,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     Value<bool>? isDone,
     Value<int?>? categoryId,
     Value<int?>? circleId,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
   }) {
     return TodosCompanion(
       id: id ?? this.id,
@@ -1068,8 +1287,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
       isDone: isDone ?? this.isDone,
       categoryId: categoryId ?? this.categoryId,
       circleId: circleId ?? this.circleId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -1103,12 +1320,6 @@ class TodosCompanion extends UpdateCompanion<Todo> {
     if (circleId.present) {
       map['circle_id'] = Variable<int>(circleId.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
     return map;
   }
 
@@ -1123,9 +1334,7 @@ class TodosCompanion extends UpdateCompanion<Todo> {
           ..write('price: $price, ')
           ..write('isDone: $isDone, ')
           ..write('categoryId: $categoryId, ')
-          ..write('circleId: $circleId, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('circleId: $circleId')
           ..write(')'))
         .toString();
   }
@@ -1134,21 +1343,285 @@ class TodosCompanion extends UpdateCompanion<Todo> {
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
   $DatabaseManager get managers => $DatabaseManager(this);
+  late final $BuildingsTable buildings = $BuildingsTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $CirclesTable circles = $CirclesTable(this);
   late final $TodosTable todos = $TodosTable(this);
+  late final BuildingDao buildingDao = BuildingDao(this as Database);
   late final TodoDao todoDao = TodoDao(this as Database);
+  late final CategoryDao categoryDao = CategoryDao(this as Database);
+  late final CircleDao circleDao = CircleDao(this as Database);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+    buildings,
     categories,
     circles,
     todos,
   ];
 }
 
+typedef $$BuildingsTableCreateCompanionBuilder =
+    BuildingsCompanion Function({
+      Value<int> id,
+      required String name,
+      required Uint8List content,
+    });
+typedef $$BuildingsTableUpdateCompanionBuilder =
+    BuildingsCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<Uint8List> content,
+    });
+
+final class $$BuildingsTableReferences
+    extends BaseReferences<_$Database, $BuildingsTable, Building> {
+  $$BuildingsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$CirclesTable, List<Circle>> _circlesRefsTable(
+    _$Database db,
+  ) => MultiTypedResultKey.fromTable(
+    db.circles,
+    aliasName: $_aliasNameGenerator(db.buildings.id, db.circles.buildingId),
+  );
+
+  $$CirclesTableProcessedTableManager get circlesRefs {
+    final manager = $$CirclesTableTableManager(
+      $_db,
+      $_db.circles,
+    ).filter((f) => f.buildingId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_circlesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$BuildingsTableFilterComposer
+    extends Composer<_$Database, $BuildingsTable> {
+  $$BuildingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> circlesRefs(
+    Expression<bool> Function($$CirclesTableFilterComposer f) f,
+  ) {
+    final $$CirclesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.circles,
+      getReferencedColumn: (t) => t.buildingId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CirclesTableFilterComposer(
+            $db: $db,
+            $table: $db.circles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$BuildingsTableOrderingComposer
+    extends Composer<_$Database, $BuildingsTable> {
+  $$BuildingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get content => $composableBuilder(
+    column: $table.content,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BuildingsTableAnnotationComposer
+    extends Composer<_$Database, $BuildingsTable> {
+  $$BuildingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get content =>
+      $composableBuilder(column: $table.content, builder: (column) => column);
+
+  Expression<T> circlesRefs<T extends Object>(
+    Expression<T> Function($$CirclesTableAnnotationComposer a) f,
+  ) {
+    final $$CirclesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.circles,
+      getReferencedColumn: (t) => t.buildingId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CirclesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.circles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$BuildingsTableTableManager
+    extends
+        RootTableManager<
+          _$Database,
+          $BuildingsTable,
+          Building,
+          $$BuildingsTableFilterComposer,
+          $$BuildingsTableOrderingComposer,
+          $$BuildingsTableAnnotationComposer,
+          $$BuildingsTableCreateCompanionBuilder,
+          $$BuildingsTableUpdateCompanionBuilder,
+          (Building, $$BuildingsTableReferences),
+          Building,
+          PrefetchHooks Function({bool circlesRefs})
+        > {
+  $$BuildingsTableTableManager(_$Database db, $BuildingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$BuildingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$BuildingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$BuildingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<Uint8List> content = const Value.absent(),
+              }) => BuildingsCompanion(id: id, name: name, content: content),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required Uint8List content,
+              }) => BuildingsCompanion.insert(
+                id: id,
+                name: name,
+                content: content,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          $$BuildingsTableReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: ({circlesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (circlesRefs) db.circles],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (circlesRefs)
+                    await $_getPrefetchedData<
+                      Building,
+                      $BuildingsTable,
+                      Circle
+                    >(
+                      currentTable: table,
+                      referencedTable: $$BuildingsTableReferences
+                          ._circlesRefsTable(db),
+                      managerFromTypedResult:
+                          (p0) =>
+                              $$BuildingsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).circlesRefs,
+                      referencedItemsForCurrentItem:
+                          (item, referencedItems) => referencedItems.where(
+                            (e) => e.buildingId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$BuildingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$Database,
+      $BuildingsTable,
+      Building,
+      $$BuildingsTableFilterComposer,
+      $$BuildingsTableOrderingComposer,
+      $$BuildingsTableAnnotationComposer,
+      $$BuildingsTableCreateCompanionBuilder,
+      $$BuildingsTableUpdateCompanionBuilder,
+      (Building, $$BuildingsTableReferences),
+      Building,
+      PrefetchHooks Function({bool circlesRefs})
+    >;
 typedef $$CategoriesTableCreateCompanionBuilder =
     CategoriesCompanion Function({Value<int> id, required String name});
 typedef $$CategoriesTableUpdateCompanionBuilder =
@@ -1381,6 +1854,7 @@ typedef $$CirclesTableCreateCompanionBuilder =
       required String block,
       required int number,
       required String suffix,
+      Value<int?> buildingId,
     });
 typedef $$CirclesTableUpdateCompanionBuilder =
     CirclesCompanion Function({
@@ -1388,11 +1862,31 @@ typedef $$CirclesTableUpdateCompanionBuilder =
       Value<String> block,
       Value<int> number,
       Value<String> suffix,
+      Value<int?> buildingId,
     });
 
 final class $$CirclesTableReferences
     extends BaseReferences<_$Database, $CirclesTable, Circle> {
   $$CirclesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $BuildingsTable _buildingIdTable(_$Database db) =>
+      db.buildings.createAlias(
+        $_aliasNameGenerator(db.circles.buildingId, db.buildings.id),
+      );
+
+  $$BuildingsTableProcessedTableManager? get buildingId {
+    final $_column = $_itemColumn<int>('building_id');
+    if ($_column == null) return null;
+    final manager = $$BuildingsTableTableManager(
+      $_db,
+      $_db.buildings,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_buildingIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static MultiTypedResultKey<$TodosTable, List<Todo>> _todosRefsTable(
     _$Database db,
@@ -1441,6 +1935,29 @@ class $$CirclesTableFilterComposer extends Composer<_$Database, $CirclesTable> {
     column: $table.suffix,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$BuildingsTableFilterComposer get buildingId {
+    final $$BuildingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.buildingId,
+      referencedTable: $db.buildings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BuildingsTableFilterComposer(
+            $db: $db,
+            $table: $db.buildings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<bool> todosRefs(
     Expression<bool> Function($$TodosTableFilterComposer f) f,
@@ -1496,6 +2013,29 @@ class $$CirclesTableOrderingComposer
     column: $table.suffix,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$BuildingsTableOrderingComposer get buildingId {
+    final $$BuildingsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.buildingId,
+      referencedTable: $db.buildings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BuildingsTableOrderingComposer(
+            $db: $db,
+            $table: $db.buildings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CirclesTableAnnotationComposer
@@ -1518,6 +2058,29 @@ class $$CirclesTableAnnotationComposer
 
   GeneratedColumn<String> get suffix =>
       $composableBuilder(column: $table.suffix, builder: (column) => column);
+
+  $$BuildingsTableAnnotationComposer get buildingId {
+    final $$BuildingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.buildingId,
+      referencedTable: $db.buildings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BuildingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.buildings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<T> todosRefs<T extends Object>(
     Expression<T> Function($$TodosTableAnnotationComposer a) f,
@@ -1558,7 +2121,7 @@ class $$CirclesTableTableManager
           $$CirclesTableUpdateCompanionBuilder,
           (Circle, $$CirclesTableReferences),
           Circle,
-          PrefetchHooks Function({bool todosRefs})
+          PrefetchHooks Function({bool buildingId, bool todosRefs})
         > {
   $$CirclesTableTableManager(_$Database db, $CirclesTable table)
     : super(
@@ -1577,11 +2140,13 @@ class $$CirclesTableTableManager
                 Value<String> block = const Value.absent(),
                 Value<int> number = const Value.absent(),
                 Value<String> suffix = const Value.absent(),
+                Value<int?> buildingId = const Value.absent(),
               }) => CirclesCompanion(
                 id: id,
                 block: block,
                 number: number,
                 suffix: suffix,
+                buildingId: buildingId,
               ),
           createCompanionCallback:
               ({
@@ -1589,11 +2154,13 @@ class $$CirclesTableTableManager
                 required String block,
                 required int number,
                 required String suffix,
+                Value<int?> buildingId = const Value.absent(),
               }) => CirclesCompanion.insert(
                 id: id,
                 block: block,
                 number: number,
                 suffix: suffix,
+                buildingId: buildingId,
               ),
           withReferenceMapper:
               (p0) =>
@@ -1605,11 +2172,42 @@ class $$CirclesTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({todosRefs = false}) {
+          prefetchHooksCallback: ({buildingId = false, todosRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [if (todosRefs) db.todos],
-              addJoins: null,
+              addJoins: <
+                T extends TableManagerState<
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic,
+                  dynamic
+                >
+              >(state) {
+                if (buildingId) {
+                  state =
+                      state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.buildingId,
+                            referencedTable: $$CirclesTableReferences
+                                ._buildingIdTable(db),
+                            referencedColumn:
+                                $$CirclesTableReferences
+                                    ._buildingIdTable(db)
+                                    .id,
+                          )
+                          as T;
+                }
+
+                return state;
+              },
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (todosRefs)
@@ -1647,7 +2245,7 @@ typedef $$CirclesTableProcessedTableManager =
       $$CirclesTableUpdateCompanionBuilder,
       (Circle, $$CirclesTableReferences),
       Circle,
-      PrefetchHooks Function({bool todosRefs})
+      PrefetchHooks Function({bool buildingId, bool todosRefs})
     >;
 typedef $$TodosTableCreateCompanionBuilder =
     TodosCompanion Function({
@@ -1660,8 +2258,6 @@ typedef $$TodosTableCreateCompanionBuilder =
       Value<bool> isDone,
       Value<int?> categoryId,
       Value<int?> circleId,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
     });
 typedef $$TodosTableUpdateCompanionBuilder =
     TodosCompanion Function({
@@ -1674,8 +2270,6 @@ typedef $$TodosTableUpdateCompanionBuilder =
       Value<bool> isDone,
       Value<int?> categoryId,
       Value<int?> circleId,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
     });
 
 final class $$TodosTableReferences
@@ -1758,16 +2352,6 @@ class $$TodosTableFilterComposer extends Composer<_$Database, $TodosTable> {
 
   ColumnFilters<bool> get isDone => $composableBuilder(
     column: $table.isDone,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1861,16 +2445,6 @@ class $$TodosTableOrderingComposer extends Composer<_$Database, $TodosTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$CategoriesTableOrderingComposer get categoryId {
     final $$CategoriesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -1946,12 +2520,6 @@ class $$TodosTableAnnotationComposer extends Composer<_$Database, $TodosTable> {
 
   GeneratedColumn<bool> get isDone =>
       $composableBuilder(column: $table.isDone, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   $$CategoriesTableAnnotationComposer get categoryId {
     final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
@@ -2037,8 +2605,6 @@ class $$TodosTableTableManager
                 Value<bool> isDone = const Value.absent(),
                 Value<int?> categoryId = const Value.absent(),
                 Value<int?> circleId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
               }) => TodosCompanion(
                 id: id,
                 priority: priority,
@@ -2049,8 +2615,6 @@ class $$TodosTableTableManager
                 isDone: isDone,
                 categoryId: categoryId,
                 circleId: circleId,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
@@ -2063,8 +2627,6 @@ class $$TodosTableTableManager
                 Value<bool> isDone = const Value.absent(),
                 Value<int?> categoryId = const Value.absent(),
                 Value<int?> circleId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
               }) => TodosCompanion.insert(
                 id: id,
                 priority: priority,
@@ -2075,8 +2637,6 @@ class $$TodosTableTableManager
                 isDone: isDone,
                 categoryId: categoryId,
                 circleId: circleId,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
               ),
           withReferenceMapper:
               (p0) =>
@@ -2161,6 +2721,8 @@ typedef $$TodosTableProcessedTableManager =
 class $DatabaseManager {
   final _$Database _db;
   $DatabaseManager(this._db);
+  $$BuildingsTableTableManager get buildings =>
+      $$BuildingsTableTableManager(_db, _db.buildings);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db, _db.categories);
   $$CirclesTableTableManager get circles =>

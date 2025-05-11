@@ -2,8 +2,12 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:navio_mobile/database/building.dart';
+import 'package:navio_mobile/database/building_dao.dart';
 import 'package:navio_mobile/database/category.dart';
+import 'package:navio_mobile/database/category_dao.dart';
 import 'package:navio_mobile/database/circle.dart';
+import 'package:navio_mobile/database/circle_dao.dart';
 import 'package:navio_mobile/database/todo.dart';
 import 'package:navio_mobile/database/todo_dao.dart';
 import 'package:path/path.dart';
@@ -11,7 +15,10 @@ import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Todos, Categories, Circles], daos: [TodoDao])
+@DriftDatabase(
+  tables: [Buildings, Todos, Categories, Circles],
+  daos: [BuildingDao, TodoDao, CategoryDao, CircleDao],
+)
 class Database extends _$Database {
   Database() : super(_openConnection());
 
